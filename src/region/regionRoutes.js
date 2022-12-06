@@ -1,6 +1,7 @@
 const { Router } = require("express");
 const {
-    getRegion,
+    getRegionByPcd,
+    getRegionById,
 } = require("./regionController");
 
 const regionRouter = Router();
@@ -31,7 +32,7 @@ const regionRouter = Router();
  *  get:
  *      tags:
  *          -   region
- *      description: Use to get a single region
+ *      description: Use to get a single region by postcode
  *      parameters:
  *      -   in: path
  *          name: pcd
@@ -47,6 +48,29 @@ const regionRouter = Router();
  *                          $ref: '#/components/schemas/Region'
  */
 
-regionRouter.get("/region/:pcd", getRegion);
+regionRouter.get("/region/:pcd", getRegionByPcd);
+
+/**
+ * @swagger
+ * /region/{id}:
+ *  get:
+ *      tags:
+ *          -   region
+ *      description: Use to get a single region by region Id
+ *      parameters:
+ *      -   in: path
+ *          name: pcd
+ *          schema:
+ *              type: string
+ *          required: true
+ *      responses:
+ *          '200':
+ *              description: A successful response
+ *              content:
+ *                  application/json:
+ *                      schema:
+ *                          $ref: '#/components/schemas/Region'
+ */
+regionRouter.get("/region/:id", getRegionById);
 
 module.exports = regionRouter;

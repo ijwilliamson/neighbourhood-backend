@@ -1,3 +1,4 @@
 const Region = require("./regionModel");
 
-exports.getRegion = async (req, res) => {};
+exports.getRegionByPcd = async (req, res) => {};
+exports.getRegionById = async (req, res) => {};
