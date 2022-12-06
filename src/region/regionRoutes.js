@@ -1,6 +1,7 @@
 const { Router } = require("express");
 const {
     getRegionByPcd,
+    getRegionById,
 } = require("./regionController");
 
 const regionRouter = Router();
