@@ -87,6 +87,10 @@ const userRouter = Router();
  *                  type: string
  *                  description: The users email address
  *                  example: ian@mail.com
+ *              password:
+ *                  type: string
+ *                  description: The users password
+ *                  example: password
  *              pcd:
  *                  type: string
  *                  description: The users postcode
@@ -134,7 +138,7 @@ userRouter.get("/users", readUsers);
 
 /**
  * @swagger
- * /user/{:id}:
+ * /user/{id}:
  *  get:
  *      tags:
  *          - user
@@ -146,24 +150,24 @@ userRouter.get("/users", readUsers);
  *              type: integer
  *              required: true
  *              description: The user id
- *          responses:
- *              '200':
- *                  description: A successful response
- *                  content:
- *                      application/json:
- *                          schema:
- *                              $ref: '#/components/schemas/User'
- *              '500':
- *                  description: An error response
- *                  content:
- *                      application/json:
- *                          schema:
- *                              type: object
- *                              properties:
- *                                  message:
- *                                      type: string
- *                                      description: The error message
- *                                      example: Internal server error
+ *      responses:
+ *          '200':
+ *              description: A successful response
+ *              content:
+ *                  application/json:
+ *                      schema:
+ *                          $ref: '#/components/schemas/ReturnedUser'
+ *          '500':
+ *              description: An error response
+ *              content:
+ *                  application/json:
+ *                      schema:
+ *                          type: object
+ *                          properties:
+ *                              message:
+ *                                  type: string
+ *                                  description: The error message
+ *                                  example: Internal server error
  *
  *
  */
@@ -205,7 +209,7 @@ userRouter.post("/user", createUser);
 
 /**
  * @swagger
- * /user/{:id}:
+ * /user/{id}:
  *  put:
  *      tags:
  *          - user
@@ -246,7 +250,7 @@ userRouter.put("/user/:id", updateUser);
 
 /**
  * @swagger
- * /user/{:id}:
+ * /user/{id}:
  *  delete:
  *      tags:
  *          - user
@@ -264,7 +268,12 @@ userRouter.put("/user/:id", updateUser);
  *              content:
  *                  application/json:
  *                      schema:
- *                          $ref: '#/components/schemas/ReturnedUser'
+ *                          type: object
+ *                          properties:
+ *                              message:
+ *                                 type: string
+ *                                 description: The message
+ *                                 example: User deleted
  *              '500':
  *                  description: An error response
  *                  content:
