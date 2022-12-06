@@ -23,27 +23,20 @@ const User = sequelize.define("User", {
     },
     pcd: {
         type: DataTypes.STRING,
-        allowNull: false,
+        allowNull: true,
     },
     name: {
         type: DataTypes.STRING,
-        allowNull: false,
+        allowNull: true,
     },
     address: {
         type: DataTypes.STRING,
-        allowNull: false,
+        allowNull: true,
     },
     region_id: {
         type: DataTypes.INTEGER,
-        allowNull: false,
-    },
-    created_at: {
-        type: DataTypes.DATE,
-        allowNull: false,
-    },
-    updated_at: {
-        type: DataTypes.DATE,
-        allowNull: false,
+        defaultValue: 0,
+        allowNull: true,
     },
 });
 
