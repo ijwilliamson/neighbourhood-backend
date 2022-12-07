@@ -45,11 +45,5 @@ const User = sequelize.define(
     { timestamps: false }
 );
 
-// // Set up the foreign key relationship with Posts
-// User.hasMany(Post, {
-//     OnDelete: "CASCADE",
-//     onUpdate: "CASCADE",
-// });
-// Post.belongsTo(User);
 
 module.exports = User;
