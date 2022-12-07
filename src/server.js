@@ -40,6 +40,7 @@ const swaggerDocs = swaggerJsDoc(swaggerOptions);
 
 // routes
 
+const postRoutes = require("./post/postRoutes");
 const regionRoutes = require("./region/regionRoutes");
 const userRouter = require("./user/userRoutes");
 const authRouter = require("./auth/authRoutes");
@@ -60,6 +61,7 @@ const app = express();
 app.use(cors({ origin: "*" }));
 app.use(express.json());
 
+app.use(postRoutes);
 app.use(regionRoutes);
 app.use(userRouter);
 app.use(authRouter);

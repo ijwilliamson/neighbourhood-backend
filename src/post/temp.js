@@ -1,14 +1,3 @@
-const { Router } = require("express");
-
-const postRouter = Router();
-const {
-    createPost,
-    readPosts,
-    readPost,
-    updatePost,
-    deletePost,
-} = require("./postController");
-
 /**
  * @swagger
  * components:
@@ -20,21 +9,6 @@ const {
  *                  type: integer
  *                  description: The auto-generated id of the post
  *                  example: 1
- *              post_type:
- *                  type: integer
- *                  description: The type of post
- *                  example: 1
- *              user_id:
- *                  type: integer
- *                  description: The id of the user
- *                  example: 1
- *              post_content:
- *                  type: string
- *                  description: The content of the post
- *                  example: "This is a post"
- *      NewPost:
- *          type: object
- *          properties:
  *              post_type:
  *                  type: integer
  *                  description: The type of post
@@ -61,7 +35,7 @@ const {
  *          content:
  *              application/json:
  *                  schema:
- *                      $ref: '#/components/schemas/NewPost'
+ *                      $ref: '#/components/schemas/Post'
  *      responses:
  *          '200':
  *              description: A successful response
@@ -89,10 +63,10 @@ postRouter.post("/post", createPost);
  * /posts:
  *  get:
  *      tags:
- *          - post
+ *        - post
  *      description: Use to request all posts
  *      responses:
- *          '200':
+ *         '200':
  *              description: A successful response
  *              content:
  *                  application/json:
@@ -170,7 +144,7 @@ postRouter.get("/post/:id", readPost);
  *          content:
  *              application/json:
  *                  schema:
- *                      $ref: '#/components/schemas/NewPost'
+ *                      $ref: '#/components/schemas/Post'
  *      responses:
  *          '200':
  *              description: A successful response
@@ -213,7 +187,7 @@ postRouter.put("/post/:id", updatePost);
  *              content:
  *                  application/json:
  *                      schema:
- *                          type: object
+ *                         type: object
  *                          properties:
  *                              message:
  *                                  type: string
@@ -233,5 +207,3 @@ postRouter.put("/post/:id", updatePost);
  */
 
 postRouter.delete("/post/:id", deletePost);
-
-module.exports = postRouter;
