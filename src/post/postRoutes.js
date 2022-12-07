@@ -7,6 +7,8 @@ const {
     readPost,
     updatePost,
     deletePost,
+    readUserPost,
+    readTypePost,
 } = require("./postController");
 
 /**
@@ -150,6 +152,88 @@ postRouter.get("/posts", readPosts);
  */
 
 postRouter.get("/post/:id", readPost);
+
+/**
+ * @swagger
+ * /posts/user/{user_id}:
+ *  get:
+ *      tags:
+ *          - post
+ *      description: Use to request a users posts
+ *      parameters:
+ *      -   in: path
+ *          name: user_id
+ *          schema:
+ *              type: integer
+ *              required: true
+ *              description: The post id
+ *      responses:
+ *          '200':
+ *              description: A successful response
+ *              content:
+ *                  application/json:
+ *                      schema:
+ *                          type: array
+ *                          items:
+ *                              $ref: '#/components/schemas/Post'
+ *          '500':
+ *              description: An error response
+ *              content:
+ *                  application/json:
+ *                      schema:
+ *                          type: object
+ *                          properties:
+ *                              message:
+ *                                  type: string
+ *                                  description: The error message
+ *                                  example: Internal server error
+ */
+
+postRouter.get(
+    "/posts/user/:user_id",
+    readUserPost
+);
+
+/**
+ * @swagger
+ * /posts/type/{post_type}:
+ *  get:
+ *      tags:
+ *          - post
+ *      description: Use to request posts by type
+ *      parameters:
+ *      -   in: path
+ *          name: post_type
+ *          schema:
+ *              type: integer
+ *              required: true
+ *              description: The post type id
+ *      responses:
+ *          '200':
+ *              description: A successful response
+ *              content:
+ *                  application/json:
+ *                      schema:
+ *                          type: array
+ *                          items:
+ *                              $ref: '#/components/schemas/Post'
+ *          '500':
+ *              description: An error response
+ *              content:
+ *                  application/json:
+ *                      schema:
+ *                          type: object
+ *                          properties:
+ *                              message:
+ *                                  type: string
+ *                                  description: The error message
+ *                                  example: Internal server error
+ */
+
+postRouter.get(
+    "/posts/type/:post_type",
+    readTypePost
+);
 
 /**
  * @swagger
