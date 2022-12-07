@@ -7,6 +7,9 @@
 const { sequelize } = require("./db/connection");
 const express = require("express");
 
+const User = require("./user/userModel");
+const Post = require("./post/postModel");
+
 // swagger
 const swaggerJsDoc = require("swagger-jsdoc");
 const swaggerUi = require("swagger-ui-express");
@@ -48,6 +51,14 @@ const schoolRouter = require("./school/schoolRoutes");
 
 // sequelize
 const syncTables = async () => {
+    // Set up the foreign key relationship with Posts
+
+    User.hasMany(Post, {
+        OnDelete: "CASCADE",
+        onUpdate: "CASCADE",
+    });
+    Post.belongsTo(User);
+
     sequelize.sync();
 };
 
