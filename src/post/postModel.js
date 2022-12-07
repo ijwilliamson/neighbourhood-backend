@@ -12,6 +12,7 @@ const Post = sequelize.define(
         post_type: {
             type: DataTypes.INTEGER,
         },
+        // user_id not required as this is generated automatically by the association
         // user_id: {
         //     type: DataTypes.INTEGER,
         // },
