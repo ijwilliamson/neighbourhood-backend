@@ -1,10 +1,37 @@
 const Post = require("./postModel");
+const User = require("../user/userModel");
 
 exports.createPost = async (req, res) => {
     try {
+        if (!req.body.user_id) {
+            res.status(500).json({
+                message: "No user provided",
+            });
+            return;
+        }
+
+        const user = await User.findByPk(
+            req.body.user_id
+        );
+        if (!user) {
+            res.status(500).json({
+                message: "User not found",
+            });
+            return;
+        }
+
         const newPost = await Post.create(
             req.body
         );
+
+        if (!newPost) {
+            res.status(500).json({
+                message: "Post not created",
+            });
+            return;
+        }
+
+        user.addPost(newPost);
         res.status(201).json(newPost);
     } catch (error) {
         res.status(500).json({
