@@ -3,6 +3,7 @@ const { Router } = require("express");
 const { loginUser } = require("./authController");
 const {
     checkPass,
+    validPersistantToken,
 } = require("../middleware/authentication");
 
 const authRouter = Router();
@@ -11,6 +12,14 @@ const authRouter = Router();
  * @swagger
  * components:
  *  schemas:
+ *      TokenCheck:
+ *          type: object
+ *          properties:
+ *              token:
+ *                  type: string
+ *                  description: The Users token
+ *                  example: sdjfhskldj3423897432.wjsediefjsoi3274
+ 
  *      AuthUser:
  *          type: object
  *          properties:
@@ -71,7 +80,7 @@ const authRouter = Router();
  *      description: Use to authorise user
  *
  *      requestBody:
- *          description: Create a new food
+ *          description: User login details (username & password)
  *
  *          content:
  *              application/json:
@@ -88,5 +97,35 @@ const authRouter = Router();
  */
 
 authRouter.post("/auth", checkPass, loginUser);
+
+/**
+ * @swagger
+ * /auth/checkToken:
+ *  post:
+ *      tags:
+ *          -   authentication
+ *      description: Use to validate a users token
+ *
+ *      requestBody:
+ *          description: User token
+ *
+ *          content:
+ *              application/json:
+ *                  schema:
+ *                      $ref: '#/components/schemas/TokenCheck'
+ *
+ *      responses:
+ *          '200':
+ *              description: A successful response
+ *              content:
+ *                  application/json:
+ *                      schema:
+ *                          $ref: '#/components/schemas/ValidUser'
+ */
+
+authRouter.post(
+    "/auth/checkToken",
+    validPersistantToken
+);
 
 module.exports = authRouter;

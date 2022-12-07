@@ -174,6 +174,64 @@ exports.validateToken = async (
     }
 };
 
+exports.validPersistantToken = async (
+    request,
+    response
+) => {
+    try {
+        if (!request.body.token) {
+            response.status(401).send({
+                status: "No token supplied, not authorized, login required",
+            });
+            return;
+        }
+
+        const token = request.body.token;
+
+        const decodedToken = await jwt.verify(
+            token,
+            process.env.SECRET
+        );
+
+        // Check the user is valid
+        // attempt to get a user
+        const user = await User.findByPk(
+            decodedToken.id
+        );
+
+        if (!user) {
+            response.status(401).send({
+                status: "Not authorized, login required",
+            });
+            return;
+        }
+
+        console.log(decodedToken);
+
+        request.isTokenValid = true;
+
+        response.status(200).send({
+            token: token,
+            id: user.id,
+            user_name: user.user_name,
+            email: user.email,
+            pcd: user.pcd,
+            name: user.name,
+            address: user.address,
+            region: [
+                {
+                    region_id: user.region_id,
+                },
+            ],
+        });
+    } catch (error) {
+        console.log(error);
+
+        response
+            .status(500)
+            .send({ error: error.message });
+    }
+};
 // const isTokenExpired = (date, timeout) =>{
 //     // return true if Expired
 //     // timeout in milliseconds
