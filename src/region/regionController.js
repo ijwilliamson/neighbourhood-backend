@@ -1,4 +1,5 @@
 const Region = require("./regionModel");
+const Postcode = require("../postcode/postcodeModel");
 
 exports.getRegionById = async (req, res) => {
     console.log(req);
@@ -21,7 +22,26 @@ exports.getRegionById = async (req, res) => {
 
 exports.getRegionByPcd = async (req, res) => {
     try {
-        const region = await Region.findOne({});
+        if (!req.params.pcd) {
+            res.status(400).send(
+                "Postcode not found"
+            );
+            return;
+        }
+        const postcode = await Postcode.findOne({
+            where: { pcd: req.params.pcd },
+        });
+        if (!postcode) {
+            res.status(404).send(
+                "Postcode not found"
+            );
+            return;
+        }
+        const region = await Region.findOne({
+            where: {
+                region_name: postcode.oa21cd,
+            },
+        });
         if (region) {
             res.status(200).json(region);
         } else {
