@@ -1,5 +1,6 @@
 const { DataTypes } = require("sequelize");
 const { sequelize } = require("../db/connection");
+const { Post } = require("../post/postModel");
 
 const User = sequelize.define(
     "User",
@@ -43,5 +44,6 @@ const User = sequelize.define(
     },
     { timestamps: false }
 );
+
 
 module.exports = User;
