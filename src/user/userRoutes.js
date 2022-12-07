@@ -1,5 +1,8 @@
 const { Router } = require("express");
 const {
+    hashPass,
+} = require("../middleware/authentication");
+const {
     readUsers,
     readUser,
     createUser,
@@ -205,7 +208,7 @@ userRouter.get("/user/:id", readUser);
  *                                      description: The error message
  *                                      example: Internal server error
  */
-userRouter.post("/user", createUser);
+userRouter.post("/user", hashPass, createUser);
 
 /**
  * @swagger
@@ -246,7 +249,7 @@ userRouter.post("/user", createUser);
  *                                      description: The error message
  *                                      example: Internal server error
  */
-userRouter.put("/user/:id", updateUser);
+userRouter.put("/user/:id", hashPass, updateUser);
 
 /**
  * @swagger
