@@ -26,9 +26,11 @@ const swaggerOptions = {
     },
     // ['.routes/*.js']
     apis: [
+
         "src/school/schoolRoutes.js",
         "src/user/userRoutes.js",
         "src/auth/authRoutes.js",
+
         "src/server.js",
     ],
 };
@@ -40,6 +42,7 @@ const swaggerDocs = swaggerJsDoc(swaggerOptions);
 const userRouter = require("./user/userRoutes");
 const authRouter = require("./auth/authRoutes");
 const schoolRouter = require("./school/schoolRoutes");
+
 
 // sequelize
 const syncTables = async () => {
@@ -59,6 +62,7 @@ app.use(express.json());
 app.use(userRouter);
 app.use(authRouter);
 app.use(schoolRouter);
+
 
 app.use(
     "/api-docs",
