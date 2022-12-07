@@ -24,7 +24,7 @@ exports.getRegionByPcd = async (req, res) => {
     try {
         if (!req.params.pcd) {
             res.status(400).send(
-                "Postcode not found"
+                "Postcode not supplied"
             );
             return;
         }
