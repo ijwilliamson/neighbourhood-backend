@@ -27,6 +27,10 @@ const swaggerOptions = {
     // ['.routes/*.js']
     apis: [
         "src/region/regionRoutes.js",
+        "src/school/schoolRoutes.js",
+        "src/user/userRoutes.js",
+        "src/auth/authRoutes.js",
+
         "src/server.js",
     ],
 };
@@ -35,9 +39,13 @@ const swaggerDocs = swaggerJsDoc(swaggerOptions);
 
 // routes
 
+
 const regionRoutes = require("./region/regionRoutes");
-// const userRouter = require("./user/userRoutes");
-// const authRouter = require("./auth/authRoutes");
+const userRouter = require("./user/userRoutes");
+const authRouter = require("./auth/authRoutes");
+const schoolRouter = require("./school/schoolRoutes");
+
+
 
 // sequelize
 const syncTables = async () => {
@@ -54,10 +62,12 @@ const app = express();
 app.use(cors({ origin: "*" }));
 app.use(express.json());
 
-// app.use(userRouter);
-// app.use(authRouter);
-// app.use(foodRouter);
+
 app.use(regionRoutes);
+app.use(userRouter);
+app.use(authRouter);
+app.use(schoolRouter);
+
 app.use(
     "/api-docs",
     swaggerUi.serve,
