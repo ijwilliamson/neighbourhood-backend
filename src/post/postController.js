@@ -1,10 +1,41 @@
 const Post = require("./postModel");
+const User = require("../user/userModel");
 
 exports.createPost = async (req, res) => {
     try {
-        const newPost = await Post.create(
-            req.body
+        if (!req.body.user_id) {
+            res.status(500).json({
+                message: "No user provided",
+            });
+            return;
+        }
+
+        const user = await User.findByPk(
+            req.body.user_id
         );
+        if (!user) {
+            res.status(500).json({
+                message: "User not found",
+            });
+            return;
+        }
+
+        const newPost = await Post.create({
+            post_type: req.body.post_type,
+            post_content:
+                req.body.post_content.Post,
+            created_at: new Date().toJSON(),
+            updated_at: new Date().toJSON(),
+        });
+
+        if (!newPost) {
+            res.status(500).json({
+                message: "Post not created",
+            });
+            return;
+        }
+
+        user.addPost(newPost);
         res.status(201).json(newPost);
     } catch (error) {
         res.status(500).json({
@@ -17,6 +48,52 @@ exports.readPosts = async (req, res) => {
     try {
         const posts = await Post.findAll();
         res.status(200).json(posts);
+    } catch (error) {
+        res.status(500).json({
+            message: error.message,
+        });
+    }
+};
+
+exports.readTypePost = async (req, res) => {
+    try {
+        const posts = await Post.findAll({
+            where: {
+                post_type: req.params.post_type,
+            },
+        });
+        res.status(200).json(posts);
+    } catch (error) {
+        res.status(500).json({
+            message: error.message,
+        });
+    }
+};
+
+exports.readUserPost = async (req, res) => {
+    try {
+        if (!req.params.user_id) {
+            res.status(500).json({
+                message: "No user_id provided",
+            });
+            return;
+        }
+
+        const user = await User.findByPk(
+            req.params.user_id,
+            {
+                include: { model: Post },
+            }
+        );
+
+        if (!user) {
+            res.status(500).json({
+                message: "User not found",
+            });
+            return;
+        }
+
+        res.status(200).json(user.Posts);
     } catch (error) {
         res.status(500).json({
             message: error.message,

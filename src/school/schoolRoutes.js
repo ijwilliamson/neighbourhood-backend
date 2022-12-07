@@ -61,7 +61,7 @@ const {
 
 /**
  * @swagger
- * /school/{regionId}:
+ * /schools/{regionId}:
  *  get:
  *      tags:
  *          - school
@@ -95,7 +95,7 @@ const {
  *
  */
 schoolRouter.get(
-    "/school/:regionId",
+    "/schools/:regionId",
     readSchools
 );
 
@@ -109,10 +109,11 @@ schoolRouter.get(
  *      parameters:
  *      -   in: path
  *          name: name
+ *          description: spaces replaced with +
  *          schema:
  *              type: string
  *              required: true
- *              description: The school name
+ *              description: The school name (spaces replaced with +)
  *      responses:
  *          '200':
  *              description: A successful response
@@ -134,6 +135,6 @@ schoolRouter.get(
  *
  *
  */
-schoolRouter.get("/school/:id", readSchool);
+schoolRouter.get("/school/:name", readSchool);
 
 module.exports = schoolRouter;
