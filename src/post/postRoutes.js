@@ -144,7 +144,7 @@ postRouter.post(
 
 postRouter.post(
     "/post/favorite",
-
+    validateToken,
     favoritePost
 );
 
@@ -261,7 +261,7 @@ postRouter.get(
 
 postRouter.get(
     "/posts/search/:search",
-
+    validateToken,
     searchPost
 );
 
