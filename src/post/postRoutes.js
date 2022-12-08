@@ -14,6 +14,7 @@ const {
     readUserPost,
     readTypePost,
     searchPost,
+    favoritePost,
 } = require("./postController");
 
 /**
@@ -39,6 +40,11 @@ const {
  *                  type: string
  *                  description: The content of the post
  *                  example: "This is a post"
+ *              fav:
+ *                  type: bool
+ *                  description: The current user has this post as a favorite
+ *                  example: "1"
+ *
  *      NewPost:
  *          type: object
  *          properties:
@@ -54,6 +60,19 @@ const {
  *                  type: string
  *                  description: The content of the post
  *                  example: "This is a post"
+ *
+ *      FavPost:
+ *          type: object
+ *          properties:
+ *
+ *              user_id:
+ *                  type: integer
+ *                  description: The id of the user
+ *                  example: 1
+ *              post_id:
+ *                  type: integer
+ *                  description: The id of the post
+ *                  example: 2
  */
 
 /**
@@ -93,6 +112,45 @@ postRouter.post(
     "/post",
     validateToken,
     createPost
+);
+
+/**
+ * @swagger
+ * /post/favorite:
+ *  post:
+ *      tags:
+ *          - post
+ *      description: Use to create favorite / unfavorite a post
+ *      requestBody:
+ *          required: true
+ *          content:
+ *              application/json:
+ *                  schema:
+ *                      $ref: '#/components/schemas/FavPost'
+ *      responses:
+ *          '200':
+ *              description: A successful response
+ *              content:
+ *                  application/json:
+ *                      schema:
+ *                          $ref: '#/components/schemas/FavPost'
+ *              '500':
+ *                  description: An error response
+ *                  content:
+ *                      application/json:
+ *                          schema:
+ *                              type: object
+ *                              properties:
+ *                                  message:
+ *                                      type: string
+ *                                      description: The error message
+ *                                      example: Internal server error
+ */
+
+postRouter.post(
+    "/post/favorite",
+    validateToken,
+    favoritePost
 );
 
 /**
@@ -208,7 +266,7 @@ postRouter.get(
 
 postRouter.get(
     "/posts/search/:search",
-
+    validateToken,
     searchPost
 );
 
