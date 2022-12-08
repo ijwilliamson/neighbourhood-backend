@@ -117,7 +117,24 @@ exports.updateUser = async (req, res) => {
                     id: req.params.id,
                 },
             });
-            res.status(200).json(user);
+
+            const UpdatedUser =
+                await User.findByPk(
+                    req.params.id,
+                    {
+                        attributes: [
+                            "id",
+                            "user_name",
+                            "email",
+                            "pcd",
+                            "name",
+                            "address",
+                            "region_id",
+                        ],
+                    }
+                );
+
+            res.status(200).json(UpdatedUser);
         } else {
             res.status(404).json({
                 message: "User not found",
