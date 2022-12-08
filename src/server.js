@@ -26,7 +26,22 @@ const swaggerOptions = {
             },
             servers: ["http://localhost:5000"],
         },
+        components: {
+            securitySchemes: {
+                bearerAuth: {
+                    type: "http",
+                    scheme: "bearer",
+                    bearerFormat: "JWT",
+                },
+            },
+        },
+        security: [
+            {
+                bearerAuth: [],
+            },
+        ],
     },
+
     // ['.routes/*.js']
     apis: [
         "src/post/postRoutes.js",
