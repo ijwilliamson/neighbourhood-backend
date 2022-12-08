@@ -1,5 +1,6 @@
 const Post = require("./postModel");
 const User = require("../user/userModel");
+const { Op } = require("sequelize");
 
 exports.createPost = async (req, res) => {
     try {
@@ -60,6 +61,31 @@ exports.readTypePost = async (req, res) => {
         const posts = await Post.findAll({
             where: {
                 post_type: req.params.post_type,
+            },
+        });
+        res.status(200).json(posts);
+    } catch (error) {
+        res.status(500).json({
+            message: error.message,
+        });
+    }
+};
+
+exports.searchPost = async (req, res) => {
+    try {
+        if (!req.params.search) {
+            res.status(500).json({
+                message:
+                    "No search term supplied",
+            });
+            return;
+        }
+
+        const posts = await Post.findAll({
+            where: {
+                post_content: {
+                    [Op.like]: `%${req.params.search}%`,
+                },
             },
         });
         res.status(200).json(posts);
