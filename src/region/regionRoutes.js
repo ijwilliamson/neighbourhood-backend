@@ -28,10 +28,10 @@ const regionRouter = Router();
  *                 items:
  *                     type: object
  *                     properties:
- *                     pcd:
- *                         type: string
- *                         description: The postcode
- *                         example: E1 1AA
+ *                         pcd:
+ *                             type: string
+ *                             description: The postcode
+ *                             example: E1 1AA
  * 
 
  */
