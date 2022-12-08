@@ -1,3 +1,4 @@
+const { sequelize } = require("../db/connection");
 const Region = require("./regionModel");
 const Postcode = require("../postcode/postcodeModel");
 
@@ -8,8 +9,31 @@ exports.getRegionById = async (req, res) => {
             req.params.id,
             { attributes: ["id", "region_name"] }
         );
+
+        const postcodesSql = `SELECT Postcodes.pcd, Regions.id, Regions.region_name FROM Regions
+                    INNER JOIN Postcodes On Regions.region_name = Postcodes.oa21cd
+                    WHERE id = ${req.params.id};`;
+        const postcodeResults =
+            await sequelize.query(postcodesSql);
+        const newPostcodeResultsArray =
+            postcodeResults[0];
+        const arrayPc = [];
+        for (const pc of newPostcodeResultsArray) {
+            arrayPc.push({
+                pcd: pc.pcd,
+            });
+        }
+        const postcodeResponse = {
+            id: req.params.id,
+            region_name:
+                newPostcodeResultsArray[0]
+                    .region_name,
+            postcodes: arrayPc,
+        };
         if (region) {
-            res.status(200).json(region);
+            res.status(200).json(
+                postcodeResponse
+            );
         } else {
             res.status(404).send(
                 "Region not found"
