@@ -75,6 +75,7 @@ const authRouter = Router();
  * @swagger
  * /auth:
  *  post:
+ *      security: []
  *      tags:
  *          -   authentication
  *      description: Use to authorise user
@@ -102,6 +103,7 @@ authRouter.post("/auth", checkPass, loginUser);
  * @swagger
  * /auth/checkToken:
  *  post:
+ *      security: []
  *      tags:
  *          -   authentication
  *      description: Use to validate a users token
