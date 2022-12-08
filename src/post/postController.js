@@ -23,8 +23,7 @@ exports.createPost = async (req, res) => {
 
         const newPost = await Post.create({
             post_type: req.body.post_type,
-            post_content:
-                req.body.post_content.Post,
+            post_content: req.body.post_content,
             created_at: new Date().toJSON(),
             updated_at: new Date().toJSON(),
         });
