@@ -1,5 +1,6 @@
 const Post = require("./postModel");
 const User = require("../user/userModel");
+const FavoritePost = require("./userPostModel");
 const { Op } = require("sequelize");
 
 exports.createPost = async (req, res) => {
@@ -37,6 +38,47 @@ exports.createPost = async (req, res) => {
 
         user.addPost(newPost);
         res.status(201).json(newPost);
+    } catch (error) {
+        res.status(500).json({
+            message: error.message,
+        });
+    }
+};
+
+exports.favoritePost = async (req, res) => {
+    try {
+        const result = await FavoritePost.destroy(
+            {
+                where: {
+                    UserId: req.body.user_id,
+                    PostId: req.body.post_id,
+                },
+            }
+        );
+
+        if (result) {
+            res.status(201).json({
+                message: "favorite removed",
+            });
+            return;
+        }
+
+        const post = await Post.findByPk(
+            req.body.post_id
+        );
+
+        if (!post) {
+            res.status(500).json({
+                message: "post not found",
+            });
+            return;
+        }
+
+        post.addUser(req.body.user_id);
+        res.status(201).json({
+            user_id: req.body.user_id,
+            post_id: req.body.post_id,
+        });
     } catch (error) {
         res.status(500).json({
             message: error.message,
