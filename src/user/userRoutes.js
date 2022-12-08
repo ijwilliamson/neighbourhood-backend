@@ -6,6 +6,10 @@ const {
 } = require("../middleware/authentication");
 
 const {
+    validateNewUser,
+} = require("../middleware/validation");
+
+const {
     readUsers,
     readUser,
     createUser,
@@ -221,7 +225,12 @@ userRouter.get(
  *                                      description: The error message
  *                                      example: Internal server error
  */
-userRouter.post("/user", hashPass, createUser);
+userRouter.post(
+    "/user",
+    validateNewUser,
+    hashPass,
+    createUser
+);
 
 /**
  * @swagger
