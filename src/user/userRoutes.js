@@ -1,7 +1,14 @@
 const { Router } = require("express");
+
 const {
     hashPass,
+    validateToken,
 } = require("../middleware/authentication");
+
+const {
+    validateNewUser,
+} = require("../middleware/validation");
+
 const {
     readUsers,
     readUser,
@@ -106,7 +113,42 @@ const userRouter = Router();
  *                  type: string
  *                  description: The users address
  *                  example: 1 Downing Street
-
+*      TokenedUser:
+ *          type: object
+ *          properties:
+ *              token:
+ *                  type: string
+ *                  description: The users token
+ *                  example: iIsInR5cCI6IkpXVCJ9.eyJpZCI6ODMsImlhdCI6MTY 
+ *              id:
+ *                  type: integer
+ *                  description: The users Id
+ *                  example: 1
+ *              user_name:
+ *                  type: string
+ *                  description: The username
+ *                  example: ijwilliamson
+ *              email:
+ *                  type: string
+ *                  description: The users email address
+ *                  example: ian@mail.com
+ *              pcd:
+ *                  type: string
+ *                  description: The users postcode
+ *                  example: SW1A 1AA
+ *              name:
+ *                  type: string
+ *                  description: The users name
+ *                  example: Ian Williamson
+ *              address:
+ *                  type: string
+ *                  description: The users address
+ *                  example: 1 Downing Street
+ *              region_id:
+ *                  type: id
+ *                  description: The users region id
+ *                  example: 1
+ 
  */
 
 /**
@@ -137,7 +179,11 @@ const userRouter = Router();
  *                                  description: The error message
  *                                  example: Internal server error
  */
-userRouter.get("/users", readUsers);
+userRouter.get(
+    "/users",
+    validateToken,
+    readUsers
+);
 
 /**
  * @swagger
@@ -174,12 +220,18 @@ userRouter.get("/users", readUsers);
  *
  *
  */
-userRouter.get("/user/:id", readUser);
+userRouter.get(
+    "/user/:id",
+    validateToken,
+    readUser
+);
 
 /**
  * @swagger
  * /user:
  *  post:
+ *      security: []
+ *
  *      tags:
  *          - user
  *      description: Use to create a new user
@@ -195,7 +247,7 @@ userRouter.get("/user/:id", readUser);
  *              content:
  *                  application/json:
  *                      schema:
- *                          $ref: '#/components/schemas/ReturnedUser'
+ *                          $ref: '#/components/schemas/TokenedUser'
  *              '500':
  *                  description: An error response
  *                  content:
@@ -208,7 +260,12 @@ userRouter.get("/user/:id", readUser);
  *                                      description: The error message
  *                                      example: Internal server error
  */
-userRouter.post("/user", hashPass, createUser);
+userRouter.post(
+    "/user",
+    validateNewUser,
+    hashPass,
+    createUser
+);
 
 /**
  * @swagger
@@ -249,7 +306,12 @@ userRouter.post("/user", hashPass, createUser);
  *                                      description: The error message
  *                                      example: Internal server error
  */
-userRouter.put("/user/:id", hashPass, updateUser);
+userRouter.put(
+    "/user/:id",
+    validateToken,
+    hashPass,
+    updateUser
+);
 
 /**
  * @swagger
@@ -289,6 +351,10 @@ userRouter.put("/user/:id", hashPass, updateUser);
  *                                      description: The error message
  *                                      example: Internal server error
  */
-userRouter.delete("/user/:id", deleteUser);
+userRouter.delete(
+    "/user/:id",
+    validateToken,
+    deleteUser
+);
 
 module.exports = userRouter;

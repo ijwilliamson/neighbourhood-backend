@@ -1,5 +1,9 @@
 const { Router } = require("express");
 
+const {
+    validateToken,
+} = require("../middleware/authentication");
+
 const schoolRouter = Router();
 const {
     readSchools,
@@ -96,6 +100,7 @@ const {
  */
 schoolRouter.get(
     "/schools/:regionId",
+    validateToken,
     readSchools
 );
 
@@ -135,6 +140,10 @@ schoolRouter.get(
  *
  *
  */
-schoolRouter.get("/school/:name", readSchool);
+schoolRouter.get(
+    "/school/:name",
+    validateToken,
+    readSchool
+);
 
 module.exports = schoolRouter;

@@ -1,5 +1,9 @@
 const { Router } = require("express");
 
+const {
+    validateToken,
+} = require("../middleware/authentication");
+
 const postRouter = Router();
 const {
     createPost,
@@ -9,6 +13,7 @@ const {
     deletePost,
     readUserPost,
     readTypePost,
+    searchPost,
 } = require("./postController");
 
 /**
@@ -84,7 +89,11 @@ const {
  *                                      example: Internal server error
  */
 
-postRouter.post("/post", createPost);
+postRouter.post(
+    "/post",
+    validateToken,
+    createPost
+);
 
 /**
  * @swagger
@@ -115,7 +124,11 @@ postRouter.post("/post", createPost);
  *                                  example: Internal server error
  */
 
-postRouter.get("/posts", readPosts);
+postRouter.get(
+    "/posts",
+    validateToken,
+    readPosts
+);
 
 /**
  * @swagger
@@ -151,7 +164,53 @@ postRouter.get("/posts", readPosts);
  *                                  example: Internal server error
  */
 
-postRouter.get("/post/:id", readPost);
+postRouter.get(
+    "/post/:id",
+    validateToken,
+    readPost
+);
+
+/**
+ * @swagger
+ * /posts/search/{search}:
+ *  get:
+ *      tags:
+ *          - post
+ *      description: Use to search for posts matching a search term
+ *      parameters:
+ *      -   in: path
+ *          name: search
+ *          schema:
+ *              type: string
+ *              required: true
+ *              description: The search term
+ *      responses:
+ *          '200':
+ *              description: A successful response
+ *              content:
+ *                  application/json:
+ *                      schema:
+ *                          type: array
+ *                          items:
+ *                              $ref: '#/components/schemas/Post'
+ *          '500':
+ *              description: An error response
+ *              content:
+ *                  application/json:
+ *                      schema:
+ *                          type: object
+ *                          properties:
+ *                              message:
+ *                                  type: string
+ *                                  description: The error message
+ *                                  example: Internal server error
+ */
+
+postRouter.get(
+    "/posts/search/:search",
+
+    searchPost
+);
 
 /**
  * @swagger
@@ -191,6 +250,7 @@ postRouter.get("/post/:id", readPost);
 
 postRouter.get(
     "/posts/user/:user_id",
+    validateToken,
     readUserPost
 );
 
@@ -232,6 +292,7 @@ postRouter.get(
 
 postRouter.get(
     "/posts/type/:post_type",
+    validateToken,
     readTypePost
 );
 
@@ -275,7 +336,11 @@ postRouter.get(
  *                                  example: Internal server error
  *
  */
-postRouter.put("/post/:id", updatePost);
+postRouter.put(
+    "/post/:id",
+    validateToken,
+    updatePost
+);
 
 /**
  * @swagger
@@ -316,6 +381,10 @@ postRouter.put("/post/:id", updatePost);
  *                                  example: Internal server error
  */
 
-postRouter.delete("/post/:id", deletePost);
+postRouter.delete(
+    "/post/:id",
+    validateToken,
+    deletePost
+);
 
 module.exports = postRouter;
