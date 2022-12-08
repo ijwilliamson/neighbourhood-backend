@@ -7,6 +7,9 @@
 const { sequelize } = require("./db/connection");
 const express = require("express");
 
+const User = require("./user/userModel");
+const Post = require("./post/postModel");
+
 // swagger
 const swaggerJsDoc = require("swagger-jsdoc");
 const swaggerUi = require("swagger-ui-express");
@@ -26,6 +29,7 @@ const swaggerOptions = {
     },
     // ['.routes/*.js']
     apis: [
+        "src/post/postRoutes.js",
         "src/region/regionRoutes.js",
         "src/school/schoolRoutes.js",
         "src/user/userRoutes.js",
@@ -39,16 +43,22 @@ const swaggerDocs = swaggerJsDoc(swaggerOptions);
 
 // routes
 
-
+const postRoutes = require("./post/postRoutes");
 const regionRoutes = require("./region/regionRoutes");
 const userRouter = require("./user/userRoutes");
 const authRouter = require("./auth/authRoutes");
 const schoolRouter = require("./school/schoolRoutes");
 
-
-
 // sequelize
 const syncTables = async () => {
+    // Set up the foreign key relationship with Posts
+
+    User.hasMany(Post, {
+        OnDelete: "CASCADE",
+        onUpdate: "CASCADE",
+    });
+    Post.belongsTo(User);
+
     sequelize.sync();
 };
 
@@ -62,7 +72,7 @@ const app = express();
 app.use(cors({ origin: "*" }));
 app.use(express.json());
 
-
+app.use(postRoutes);
 app.use(regionRoutes);
 app.use(userRouter);
 app.use(authRouter);
