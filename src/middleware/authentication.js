@@ -126,7 +126,8 @@ exports.validateToken = async (
 
         const token = request
             .header("Authorization")
-            .replace("Bearer ", "");
+            .replace("Bearer ", "")
+            .replace("bearer ", "");
 
         const decodedToken = await jwt.verify(
             token,
