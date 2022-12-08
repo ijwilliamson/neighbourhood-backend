@@ -1,6 +1,8 @@
 // Crud operations for user using express and sequelize
 const User = require("./userModel");
 
+const jwt = require("jsonwebtoken");
+
 // create a new user
 exports.createUser = async (req, res) => {
     try {
@@ -18,7 +20,29 @@ exports.createUser = async (req, res) => {
                 ],
             }
         );
-        res.status(201).json(newUser);
+
+        // a new token is issued
+        // token is issued with the id and username
+
+        const token = await jwt.sign(
+            {
+                id: newUser.id,
+                username: newUser.username,
+            },
+            process.env.SECRET
+        );
+
+        newUser.token = token;
+        res.status(201).json({
+            token: token,
+            id: newUser.id,
+            user_name: newUser.user_name,
+            email: newUser.email,
+            pcd: newUser.pcd,
+            name: newUser.name,
+            address: newUser.address,
+            region_id: newUser.region_id,
+        });
     } catch (error) {
         res.status(500).json({
             message: error.message,
