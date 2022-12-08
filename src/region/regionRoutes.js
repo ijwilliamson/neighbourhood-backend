@@ -3,6 +3,9 @@ const {
     getRegionByPcd,
     getRegionById,
 } = require("./regionController");
+const {
+    validateToken,
+} = require("../middleware/authentication");
 
 const regionRouter = Router();
 
@@ -60,6 +63,7 @@ const regionRouter = Router();
 
 regionRouter.get(
     "/region/pcd/:pcd",
+    validateToken,
     getRegionByPcd
 );
 
@@ -84,6 +88,10 @@ regionRouter.get(
  *                      schema:
  *                          $ref: '#/components/schemas/Region'
  */
-regionRouter.get("/region/id/:id", getRegionById);
+regionRouter.get(
+    "/region/id/:id",
+    validateToken,
+    getRegionById
+);
 
 module.exports = regionRouter;
