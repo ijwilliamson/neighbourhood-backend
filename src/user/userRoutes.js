@@ -113,7 +113,42 @@ const userRouter = Router();
  *                  type: string
  *                  description: The users address
  *                  example: 1 Downing Street
-
+*      TokenedUser:
+ *          type: object
+ *          properties:
+ *              token:
+ *                  type: string
+ *                  description: The users token
+ *                  example: iIsInR5cCI6IkpXVCJ9.eyJpZCI6ODMsImlhdCI6MTY 
+ *              id:
+ *                  type: integer
+ *                  description: The users Id
+ *                  example: 1
+ *              user_name:
+ *                  type: string
+ *                  description: The username
+ *                  example: ijwilliamson
+ *              email:
+ *                  type: string
+ *                  description: The users email address
+ *                  example: ian@mail.com
+ *              pcd:
+ *                  type: string
+ *                  description: The users postcode
+ *                  example: SW1A 1AA
+ *              name:
+ *                  type: string
+ *                  description: The users name
+ *                  example: Ian Williamson
+ *              address:
+ *                  type: string
+ *                  description: The users address
+ *                  example: 1 Downing Street
+ *              region_id:
+ *                  type: id
+ *                  description: The users region id
+ *                  example: 1
+ 
  */
 
 /**
@@ -212,7 +247,7 @@ userRouter.get(
  *              content:
  *                  application/json:
  *                      schema:
- *                          $ref: '#/components/schemas/ReturnedUser'
+ *                          $ref: '#/components/schemas/TokenedUser'
  *              '500':
  *                  description: An error response
  *                  content:
