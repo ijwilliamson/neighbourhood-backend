@@ -1,4 +1,10 @@
 const { Router } = require("express");
+
+const {
+    hashPass,
+    validateToken,
+} = require("../middleware/authentication");
+
 const {
     readUsers,
     readUser,
@@ -134,7 +140,11 @@ const userRouter = Router();
  *                                  description: The error message
  *                                  example: Internal server error
  */
-userRouter.get("/users", readUsers);
+userRouter.get(
+    "/users",
+    validateToken,
+    readUsers
+);
 
 /**
  * @swagger
@@ -171,12 +181,18 @@ userRouter.get("/users", readUsers);
  *
  *
  */
-userRouter.get("/user/:id", readUser);
+userRouter.get(
+    "/user/:id",
+    validateToken,
+    readUser
+);
 
 /**
  * @swagger
  * /user:
  *  post:
+ *      security: []
+ *
  *      tags:
  *          - user
  *      description: Use to create a new user
@@ -205,7 +221,7 @@ userRouter.get("/user/:id", readUser);
  *                                      description: The error message
  *                                      example: Internal server error
  */
-userRouter.post("/user", createUser);
+userRouter.post("/user", hashPass, createUser);
 
 /**
  * @swagger
@@ -246,7 +262,12 @@ userRouter.post("/user", createUser);
  *                                      description: The error message
  *                                      example: Internal server error
  */
-userRouter.put("/user/:id", updateUser);
+userRouter.put(
+    "/user/:id",
+    validateToken,
+    hashPass,
+    updateUser
+);
 
 /**
  * @swagger
@@ -286,6 +307,10 @@ userRouter.put("/user/:id", updateUser);
  *                                      description: The error message
  *                                      example: Internal server error
  */
-userRouter.delete("/user/:id", deleteUser);
+userRouter.delete(
+    "/user/:id",
+    validateToken,
+    deleteUser
+);
 
 module.exports = userRouter;

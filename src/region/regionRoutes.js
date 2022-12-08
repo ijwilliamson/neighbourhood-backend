@@ -3,6 +3,9 @@ const {
     getRegionByPcd,
     getRegionById,
 } = require("./regionController");
+const {
+    validateToken,
+} = require("../middleware/authentication");
 
 const regionRouter = Router();
 
@@ -22,13 +25,23 @@ const regionRouter = Router();
  *              region_name:
  *                  type: string
  *                  description: The region name
- *                  example: Albion Square
+ *                  example: E00126744
+ *              postcodes:
+ *                 type: array
+ *                 items:
+ *                     type: object
+ *                     properties:
+ *                         pcd:
+ *                             type: string
+ *                             description: The postcode
+ *                             example: E1 1AA
+ * 
 
  */
 
 /**
  * @swagger
- * /region/{pcd}:
+ * /region/pcd/{pcd}:
  *  get:
  *      tags:
  *          -   region
@@ -48,20 +61,24 @@ const regionRouter = Router();
  *                          $ref: '#/components/schemas/Region'
  */
 
-regionRouter.get("/region/:pcd", getRegionByPcd);
+regionRouter.get(
+    "/region/pcd/:pcd",
+    validateToken,
+    getRegionByPcd
+);
 
 /**
  * @swagger
- * /region/{id}:
+ * /region/id/{id}:
  *  get:
  *      tags:
  *          -   region
  *      description: Use to get a single region by region Id
  *      parameters:
  *      -   in: path
- *          name: pcd
+ *          name: id
  *          schema:
- *              type: string
+ *              type: integer
  *          required: true
  *      responses:
  *          '200':
@@ -71,6 +88,10 @@ regionRouter.get("/region/:pcd", getRegionByPcd);
  *                      schema:
  *                          $ref: '#/components/schemas/Region'
  */
-regionRouter.get("/region/:id", getRegionById);
+regionRouter.get(
+    "/region/id/:id",
+    validateToken,
+    getRegionById
+);
 
 module.exports = regionRouter;
