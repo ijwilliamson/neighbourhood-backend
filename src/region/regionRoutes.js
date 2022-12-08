@@ -23,6 +23,16 @@ const regionRouter = Router();
  *                  type: string
  *                  description: The region name
  *                  example: E00126744
+ *              postcodes:
+ *                 type: array
+ *                 items:
+ *                     type: object
+ *                     properties:
+ *                     pcd:
+ *                         type: string
+ *                         description: The postcode
+ *                         example: E1 1AA
+ * 
 
  */
 
