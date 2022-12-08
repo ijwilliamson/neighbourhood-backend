@@ -161,7 +161,7 @@ exports.validateToken = async (
             });
             return;
         }
-
+        request.userId = user.id;
         console.log(decodedToken);
 
         request.isTokenValid = true;

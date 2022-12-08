@@ -2,6 +2,7 @@ const Post = require("./postModel");
 const User = require("../user/userModel");
 const FavoritePost = require("./userPostModel");
 const { Op } = require("sequelize");
+const { sequelize } = require("../db/connection");
 
 exports.createPost = async (req, res) => {
     try {
@@ -88,8 +89,14 @@ exports.favoritePost = async (req, res) => {
 
 exports.readPosts = async (req, res) => {
     try {
-        const posts = await Post.findAll();
-        res.status(200).json(posts);
+        const sql = `SELECT id, post_type, post_content, Posts.UserId, 
+                    If(Favorites.UserId IS NOT NULL, True, False) As Fav FROM Posts
+                    LEFT JOIN Favorites On Posts.Id = Favorites.PostId
+                    WHERE Favorites.UserId = ${req.userId} OR Favorites.UserId IS NULL`;
+
+        const posts = await sequelize.query(sql);
+
+        res.status(200).json(posts[0]);
     } catch (error) {
         res.status(500).json({
             message: error.message,
@@ -99,12 +106,20 @@ exports.readPosts = async (req, res) => {
 
 exports.readTypePost = async (req, res) => {
     try {
-        const posts = await Post.findAll({
-            where: {
-                post_type: req.params.post_type,
-            },
-        });
-        res.status(200).json(posts);
+        const sql = `SELECT id, post_type, post_content, Posts.UserId, 
+                    If(Favorites.UserId IS NOT NULL, True, False) As Fav FROM Posts
+                    LEFT JOIN Favorites On Posts.Id = Favorites.PostId
+                    WHERE (Favorites.UserId = ${req.userId} OR Favorites.UserId IS NULL) AND
+                            (post_type = ${req.params.post_type})`;
+
+        const posts = await sequelize.query(sql);
+
+        // const posts = await Post.findAll({
+        //     where: {
+        //         post_type: req.params.post_type,
+        //     },
+        // });
+        res.status(200).json(posts[0]);
     } catch (error) {
         res.status(500).json({
             message: error.message,
@@ -122,14 +137,22 @@ exports.searchPost = async (req, res) => {
             return;
         }
 
-        const posts = await Post.findAll({
-            where: {
-                post_content: {
-                    [Op.like]: `%${req.params.search}%`,
-                },
-            },
-        });
-        res.status(200).json(posts);
+        const sql = `SELECT id, post_type, post_content, Posts.UserId, 
+                    If(Favorites.UserId IS NOT NULL, True, False) As Fav FROM Posts
+                    LEFT JOIN Favorites On Posts.Id = Favorites.PostId
+                    WHERE (Favorites.UserId = ${req.userId} OR Favorites.UserId IS NULL) AND
+                            (post_content LIKE '%${req.params.search}%')`;
+
+        const posts = await sequelize.query(sql);
+
+        // const posts = await Post.findAll({
+        //     where: {
+        //         post_content: {
+        //             [Op.like]: `%${req.params.search}%`,
+        //         },
+        //     },
+        // });
+        res.status(200).json(posts[0]);
     } catch (error) {
         res.status(500).json({
             message: error.message,
@@ -146,21 +169,29 @@ exports.readUserPost = async (req, res) => {
             return;
         }
 
-        const user = await User.findByPk(
-            req.params.user_id,
-            {
-                include: { model: Post },
-            }
-        );
+        const sql = `SELECT id, post_type, post_content, Posts.UserId, 
+                    If(Favorites.UserId IS NOT NULL, True, False) As Fav FROM Posts
+                    LEFT JOIN Favorites On Posts.Id = Favorites.PostId
+                    WHERE (Favorites.UserId = ${req.userId} OR Favorites.UserId IS NULL) AND
+                            (Posts.UserId = ${req.params.user_id})`;
 
-        if (!user) {
-            res.status(500).json({
-                message: "User not found",
-            });
-            return;
-        }
+        const posts = await sequelize.query(sql);
 
-        res.status(200).json(user.Posts);
+        // const user = await User.findByPk(
+        //     req.params.user_id,
+        //     {
+        //         include: { model: Post },
+        //     }
+        // );
+
+        // if (!user) {
+        //     res.status(500).json({
+        //         message: "User not found",
+        //     });
+        //     return;
+        // }
+
+        res.status(200).json(posts[0]);
     } catch (error) {
         res.status(500).json({
             message: error.message,
@@ -170,10 +201,18 @@ exports.readUserPost = async (req, res) => {
 
 exports.readPost = async (req, res) => {
     try {
-        const post = await Post.findByPk(
-            req.params.id
-        );
-        res.status(200).json(post);
+        const sql = `SELECT id, post_type, post_content, Posts.UserId, 
+                    If(Favorites.UserId IS NOT NULL, True, False) As Fav FROM Posts
+                    LEFT JOIN Favorites On Posts.Id = Favorites.PostId
+                    WHERE (Favorites.UserId = ${req.userId} OR Favorites.UserId IS NULL) AND
+                            (Posts.id = ${req.params.id})`;
+
+        const post = await sequelize.query(sql);
+
+        // const post = await Post.findByPk(
+        //     req.params.id
+        // );
+        res.status(200).json(post[0][0]);
     } catch (error) {
         res.status(500).json({
             message: error.message,

@@ -40,6 +40,11 @@ const {
  *                  type: string
  *                  description: The content of the post
  *                  example: "This is a post"
+ *              fav:
+ *                  type: bool
+ *                  description: The current user has this post as a favorite
+ *                  example: "1"
+ *
  *      NewPost:
  *          type: object
  *          properties:
