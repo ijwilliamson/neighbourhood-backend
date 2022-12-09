@@ -10,6 +10,7 @@ const express = require("express");
 const User = require("./user/userModel");
 const Post = require("./post/postModel");
 const FavoritePost = require("./post/userPostModel");
+const likePost = require("./post/likePost");
 
 // swagger
 const swaggerJsDoc = require("swagger-jsdoc");
@@ -80,6 +81,13 @@ const syncTables = async () => {
     });
     Post.belongsToMany(User, {
         through: FavoritePost,
+    });
+
+    User.belongsToMany(Post, {
+        through: likePost,
+    });
+    Post.belongsToMany(User, {
+        through: likePost,
     });
 
     sequelize.sync();
