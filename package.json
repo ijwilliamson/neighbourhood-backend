@@ -4,7 +4,8 @@
     "description": "code nations M42 Backend",
     "main": "index.js",
     "scripts": {
-        "start": "node src/server.js"
+        "start": "node src/server.js",
+        "dev": "nodemon src/server.js"
     },
     "keywords": [],
     "author": "",
@@ -27,4 +28,3 @@
         "swagger-ui-express": "^4.6.0"
     }
 }
-
