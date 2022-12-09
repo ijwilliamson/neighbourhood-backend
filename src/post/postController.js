@@ -136,7 +136,7 @@ exports.readPosts = async (req, res) => {
     try {
         const sql = `SELECT Posts.id, post_type, post_content, Posts.UserId as user_id, Posts.created_at, Users.user_name, 
                     If (PostLikes.Likes IS NULL, 0, PostLikes.Likes) As likes,
-                    If(Favorites.UserId IS NOT NULL, True, False) As Fav FROM Posts
+                    If(Favorites.UserId IS NOT NULL, True, False) As fav FROM Posts
                     LEFT JOIN Favorites On Posts.Id = Favorites.PostId
                     LEFT JOIN PostLikes On Posts.Id = PostLikes.PostId
                     LEFT JOIN Users ON Posts.UserId = Users.id
@@ -156,7 +156,7 @@ exports.readTypePost = async (req, res) => {
     try {
         const sql = `SELECT Posts.id, post_type, post_content, Posts.UserId as user_id, Posts.created_at, Users.user_name, 
                     If (PostLikes.Likes IS NULL, 0, PostLikes.Likes) As likes,
-                    If(Favorites.UserId IS NOT NULL, True, False) As Fav FROM Posts
+                    If(Favorites.UserId IS NOT NULL, True, False) As fav FROM Posts
                     LEFT JOIN Favorites On Posts.Id = Favorites.PostId
                     LEFT JOIN PostLikes On Posts.Id = PostLikes.PostId
                     LEFT JOIN Users ON Posts.UserId = Users.id
@@ -190,7 +190,7 @@ exports.searchPost = async (req, res) => {
 
         const sql = `SELECT Posts.id, post_type, post_content, Posts.UserId as user_id, Posts.created_at, Users.user_name, 
                     If (PostLikes.Likes IS NULL, 0, PostLikes.Likes) As likes,
-                    If(Favorites.UserId IS NOT NULL, True, False) As Fav FROM Posts
+                    If(Favorites.UserId IS NOT NULL, True, False) As fav FROM Posts
                     LEFT JOIN Favorites On Posts.Id = Favorites.PostId
                     LEFT JOIN PostLikes On Posts.Id = PostLikes.PostId
                     LEFT JOIN Users ON Posts.UserId = Users.id
@@ -225,7 +225,7 @@ exports.readUserPost = async (req, res) => {
 
         const sql = `SELECT Posts.id, post_type, post_content, Posts.UserId as user_id, Posts.created_at, Users.user_name, 
                     If (PostLikes.Likes IS NULL, 0, PostLikes.Likes) As likes,
-                    If(Favorites.UserId IS NOT NULL, True, False) As Fav FROM Posts
+                    If(Favorites.UserId IS NOT NULL, True, False) As fav FROM Posts
                     LEFT JOIN Favorites On Posts.Id = Favorites.PostId
                     LEFT JOIN PostLikes On Posts.Id = PostLikes.PostId
                     LEFT JOIN Users ON Posts.UserId = Users.id
@@ -260,7 +260,7 @@ exports.readPost = async (req, res) => {
     try {
         const sql = `SELECT Posts.id, post_type, post_content, Posts.UserId as user_id, Posts.created_at, Users.user_name, 
                     If (PostLikes.Likes IS NULL, 0, PostLikes.Likes) As likes,
-                    If(Favorites.UserId IS NOT NULL, True, False) As Fav FROM Posts
+                    If(Favorites.UserId IS NOT NULL, True, False) As fav FROM Posts
                     LEFT JOIN Favorites On Posts.Id = Favorites.PostId
                     LEFT JOIN PostLikes On Posts.Id = PostLikes.PostId
                     LEFT JOIN Users ON Posts.UserId = Users.id
