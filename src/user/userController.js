@@ -1,11 +1,53 @@
 // Crud operations for user using express and sequelize
 const User = require("./userModel");
+const Postcode = require("../postcode/postcodeModel");
+const Region = require("../region/regionModel");
 
 // create a new user
 exports.createUser = async (req, res) => {
     try {
+        // check if postcode is valid
+        const oa21cd = await isValidPostcode(
+            req.body.pcd.toUpperCase()
+        );
+        // if no
+        if (!oa21cd) {
+            res.status(400).send(
+                "Invalid postcode"
+            );
+            console.log("invalid postcode");
+            return;
+        }
+        // check if region already exists if not create it, created is a boolean value
+        const [region, created] =
+            await Region.findOrCreate({
+                where: {
+                    region_name: oa21cd,
+                },
+            });
+        if (!created) {
+            console.log(
+                "region returned",
+                region.id,
+                region.region_name
+            );
+        } else {
+            console.log(
+                "created region",
+                region.id,
+                region.region_name
+            );
+        }
         const newUser = await User.create(
-            req.body,
+            {
+                user_name: req.body.user_name,
+                email: req.body.email,
+                password: req.body.password,
+                pcd: req.body.pcd.toUpperCase(),
+                name: req.body.name,
+                address: req.body.address,
+                region_id: region.id,
+            },
             {
                 attributes: [
                     "id",
@@ -131,3 +173,29 @@ exports.deleteUser = async (req, res) => {
         });
     }
 };
+
+// check if postcode is valid
+async function isValidPostcode(pcd) {
+    try {
+        const postcode = await Postcode.findByPk(
+            pcd
+        );
+        if (!postcode) {
+            console.log(
+                "not a postcode",
+                postcode
+            );
+            return false;
+        } else {
+            console.log(
+                "postcode found return oa21cd",
+                postcode
+            );
+            return postcode.oa21cd;
+        }
+    } catch (error) {
+        res.status(500).send({
+            message: error,
+        });
+    }
+}
