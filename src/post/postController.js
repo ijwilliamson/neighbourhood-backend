@@ -134,9 +134,9 @@ exports.likePost = async (req, res) => {
 
 exports.readPosts = async (req, res) => {
     try {
-        const sql = `SELECT id, post_type, post_content, Posts.UserId,
-                    If (PostLikes.Likes IS NULL, 0, PostLikes.Likes) As Likes,
-                    If(Favorites.UserId IS NOT NULL, True, False) As Fav FROM Posts
+        const sql = `SELECT id, post_type, post_content, Posts.UserId as user_id,
+                    If (PostLikes.Likes IS NULL, 0, PostLikes.Likes) As likes,
+                    If(Favorites.UserId IS NOT NULL, True, False) As fav FROM Posts
                     LEFT JOIN Favorites On Posts.Id = Favorites.PostId
                     LEFT JOIN PostLikes On Posts.Id = PostLikes.PostId
                     WHERE Favorites.UserId = ${req.userId} OR Favorites.UserId IS NULL`;
@@ -153,9 +153,9 @@ exports.readPosts = async (req, res) => {
 
 exports.readTypePost = async (req, res) => {
     try {
-        const sql = `SELECT id, post_type, post_content, Posts.UserId, 
-                    If (PostLikes.Likes IS NULL, 0, PostLikes.Likes) As Likes,
-                    If(Favorites.UserId IS NOT NULL, True, False) As Fav FROM Posts
+        const sql = `SELECT id, post_type, post_content, Posts.UserId as user_id,
+                    If (PostLikes.Likes IS NULL, 0, PostLikes.Likes) As likes,
+                    If(Favorites.UserId IS NOT NULL, True, False) As fav FROM Posts
                     LEFT JOIN Favorites On Posts.Id = Favorites.PostId
                     LEFT JOIN PostLikes On Posts.Id = PostLikes.PostId
                     WHERE (Favorites.UserId = ${req.userId} OR Favorites.UserId IS NULL) AND
@@ -186,9 +186,9 @@ exports.searchPost = async (req, res) => {
             return;
         }
 
-        const sql = `SELECT id, post_type, post_content, Posts.UserId, 
-                    If (PostLikes.Likes IS NULL, 0, PostLikes.Likes) As Likes,
-                    If(Favorites.UserId IS NOT NULL, True, False) As Fav FROM Posts
+        const sql = `SELECT id, post_type, post_content, Posts.UserId as user_id,
+                    If (PostLikes.Likes IS NULL, 0, PostLikes.Likes) As likes,
+                    If(Favorites.UserId IS NOT NULL, True, False) As fav FROM Posts
                     LEFT JOIN Favorites On Posts.Id = Favorites.PostId
                     LEFT JOIN PostLikes On Posts.Id = PostLikes.PostId
                     WHERE (Favorites.UserId = ${req.userId} OR Favorites.UserId IS NULL) AND
@@ -220,9 +220,9 @@ exports.readUserPost = async (req, res) => {
             return;
         }
 
-        const sql = `SELECT id, post_type, post_content, Posts.UserId, 
-                    If (PostLikes.Likes IS NULL, 0, PostLikes.Likes) As Likes,
-                    If(Favorites.UserId IS NOT NULL, True, False) As Fav FROM Posts
+        const sql = `SELECT id, post_type, post_content, Posts.UserId as user_id,
+                    If (PostLikes.Likes IS NULL, 0, PostLikes.Likes) As likes,
+                    If(Favorites.UserId IS NOT NULL, True, False) As fav FROM Posts
                     LEFT JOIN Favorites On Posts.Id = Favorites.PostId
                     LEFT JOIN PostLikes On Posts.Id = PostLikes.PostId
                     WHERE (Favorites.UserId = ${req.userId} OR Favorites.UserId IS NULL) AND
@@ -254,9 +254,9 @@ exports.readUserPost = async (req, res) => {
 
 exports.readPost = async (req, res) => {
     try {
-        const sql = `SELECT id, post_type, post_content, Posts.UserId,
-                    If (PostLikes.Likes IS NULL, 0, PostLikes.Likes) As Likes,
-                    If(Favorites.UserId IS NOT NULL, True, False) As Fav FROM Posts
+        const sql = `SELECT id, post_type, post_content, Posts.UserId as user_id,
+                    If (PostLikes.Likes IS NULL, 0, PostLikes.Likes) As likes,
+                    If(Favorites.UserId IS NOT NULL, True, False) As fav FROM Posts
                     LEFT JOIN Favorites On Posts.Id = Favorites.PostId
                     LEFT JOIN PostLikes On Posts.Id = PostLikes.PostId
                     WHERE (Favorites.UserId = ${req.userId} OR Favorites.UserId IS NULL) AND
