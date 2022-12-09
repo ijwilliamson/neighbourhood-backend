@@ -136,6 +136,10 @@ exports.readUser = async (req, res) => {
                 ],
             }
         );
+        if (!user) {
+            res.status(200).json([]);
+            return;
+        }
         res.status(200).json(user);
     } catch (error) {
         res.status(500).json({
