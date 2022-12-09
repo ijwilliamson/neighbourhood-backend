@@ -15,6 +15,7 @@ const {
     readTypePost,
     searchPost,
     favoritePost,
+    likePost,
 } = require("./postController");
 
 /**
@@ -32,7 +33,7 @@ const {
  *                  type: integer
  *                  description: The type of post
  *                  example: 1
- *              user_id:
+ *              User_id:
  *                  type: integer
  *                  description: The id of the user
  *                  example: 1
@@ -40,7 +41,11 @@ const {
  *                  type: string
  *                  description: The content of the post
  *                  example: "This is a post"
- *              fav:
+ *              Likes:
+ *                  type: integer
+ *                  description: The number of likes
+ *                  example: 2
+ *              Fav:
  *                  type: bool
  *                  description: The current user has this post as a favorite
  *                  example: "1"
@@ -151,6 +156,44 @@ postRouter.post(
     "/post/favorite",
     validateToken,
     favoritePost
+);
+/**
+ * @swagger
+ * /post/like:
+ *  post:
+ *      tags:
+ *          - post
+ *      description: Use to like a post
+ *      requestBody:
+ *          required: true
+ *          content:
+ *              application/json:
+ *                  schema:
+ *                      $ref: '#/components/schemas/FavPost'
+ *      responses:
+ *          '200':
+ *              description: A successful response
+ *              content:
+ *                  application/json:
+ *                      schema:
+ *                          $ref: '#/components/schemas/FavPost'
+ *              '500':
+ *                  description: An error response
+ *                  content:
+ *                      application/json:
+ *                          schema:
+ *                              type: object
+ *                              properties:
+ *                                  message:
+ *                                      type: string
+ *                                      description: The error message
+ *                                      example: Internal server error
+ */
+
+postRouter.post(
+    "/post/like",
+    validateToken,
+    likePost
 );
 
 /**
