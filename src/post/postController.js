@@ -1,6 +1,7 @@
 const Post = require("./postModel");
 const User = require("../user/userModel");
 const FavoritePost = require("./userPostModel");
+const likePost = require("./likePost");
 const { Op } = require("sequelize");
 const { sequelize } = require("../db/connection");
 
@@ -76,6 +77,50 @@ exports.favoritePost = async (req, res) => {
         }
 
         post.addUser(req.body.user_id);
+
+        res.status(201).json({
+            user_id: req.body.user_id,
+            post_id: req.body.post_id,
+        });
+    } catch (error) {
+        res.status(500).json({
+            message: error.message,
+        });
+    }
+};
+
+exports.likePost = async (req, res) => {
+    try {
+        const result = await likePost.destroy({
+            where: {
+                UserId: req.body.user_id,
+                PostId: req.body.post_id,
+            },
+        });
+
+        if (result) {
+            res.status(201).json({
+                message: "like removed",
+            });
+            return;
+        }
+
+        const post = await Post.findByPk(
+            req.body.post_id
+        );
+
+        if (!post) {
+            res.status(500).json({
+                message: "post not found",
+            });
+            return;
+        }
+
+        await likePost.create({
+            UserId: req.body.user_id,
+            PostId: req.body.post_id,
+        });
+
         res.status(201).json({
             user_id: req.body.user_id,
             post_id: req.body.post_id,
@@ -89,9 +134,11 @@ exports.favoritePost = async (req, res) => {
 
 exports.readPosts = async (req, res) => {
     try {
-        const sql = `SELECT id, post_type, post_content, Posts.UserId, 
+        const sql = `SELECT id, post_type, post_content, Posts.UserId,
+                    If (PostLikes.Likes IS NULL, 0, PostLikes.Likes) As Likes,
                     If(Favorites.UserId IS NOT NULL, True, False) As Fav FROM Posts
                     LEFT JOIN Favorites On Posts.Id = Favorites.PostId
+                    LEFT JOIN PostLikes On Posts.Id = PostLikes.PostId
                     WHERE Favorites.UserId = ${req.userId} OR Favorites.UserId IS NULL`;
 
         const posts = await sequelize.query(sql);
@@ -107,8 +154,10 @@ exports.readPosts = async (req, res) => {
 exports.readTypePost = async (req, res) => {
     try {
         const sql = `SELECT id, post_type, post_content, Posts.UserId, 
+                    If (PostLikes.Likes IS NULL, 0, PostLikes.Likes) As Likes,
                     If(Favorites.UserId IS NOT NULL, True, False) As Fav FROM Posts
                     LEFT JOIN Favorites On Posts.Id = Favorites.PostId
+                    LEFT JOIN PostLikes On Posts.Id = PostLikes.PostId
                     WHERE (Favorites.UserId = ${req.userId} OR Favorites.UserId IS NULL) AND
                             (post_type = ${req.params.post_type})`;
 
@@ -138,8 +187,10 @@ exports.searchPost = async (req, res) => {
         }
 
         const sql = `SELECT id, post_type, post_content, Posts.UserId, 
+                    If (PostLikes.Likes IS NULL, 0, PostLikes.Likes) As Likes,
                     If(Favorites.UserId IS NOT NULL, True, False) As Fav FROM Posts
                     LEFT JOIN Favorites On Posts.Id = Favorites.PostId
+                    LEFT JOIN PostLikes On Posts.Id = PostLikes.PostId
                     WHERE (Favorites.UserId = ${req.userId} OR Favorites.UserId IS NULL) AND
                             (post_content LIKE '%${req.params.search}%')`;
 
@@ -170,8 +221,10 @@ exports.readUserPost = async (req, res) => {
         }
 
         const sql = `SELECT id, post_type, post_content, Posts.UserId, 
+                    If (PostLikes.Likes IS NULL, 0, PostLikes.Likes) As Likes,
                     If(Favorites.UserId IS NOT NULL, True, False) As Fav FROM Posts
                     LEFT JOIN Favorites On Posts.Id = Favorites.PostId
+                    LEFT JOIN PostLikes On Posts.Id = PostLikes.PostId
                     WHERE (Favorites.UserId = ${req.userId} OR Favorites.UserId IS NULL) AND
                             (Posts.UserId = ${req.params.user_id})`;
 
@@ -201,9 +254,11 @@ exports.readUserPost = async (req, res) => {
 
 exports.readPost = async (req, res) => {
     try {
-        const sql = `SELECT id, post_type, post_content, Posts.UserId, 
+        const sql = `SELECT id, post_type, post_content, Posts.UserId,
+                    If (PostLikes.Likes IS NULL, 0, PostLikes.Likes) As Likes,
                     If(Favorites.UserId IS NOT NULL, True, False) As Fav FROM Posts
                     LEFT JOIN Favorites On Posts.Id = Favorites.PostId
+                    LEFT JOIN PostLikes On Posts.Id = PostLikes.PostId
                     WHERE (Favorites.UserId = ${req.userId} OR Favorites.UserId IS NULL) AND
                             (Posts.id = ${req.params.id})`;
 
