@@ -33,7 +33,7 @@ const {
  *                  type: integer
  *                  description: The type of post
  *                  example: 1
- *              User_id:
+ *              user_id:
  *                  type: integer
  *                  description: The id of the user
  *                  example: 1
@@ -41,11 +41,11 @@ const {
  *                  type: string
  *                  description: The content of the post
  *                  example: "This is a post"
- *              Likes:
+ *              likes:
  *                  type: integer
  *                  description: The number of likes
  *                  example: 2
- *              Fav:
+ *              fav:
  *                  type: bool
  *                  description: The current user has this post as a favorite
  *                  example: "1"
