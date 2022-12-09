@@ -37,6 +37,14 @@ const {
  *                  type: integer
  *                  description: The id of the user
  *                  example: 1
+ *              user_name:
+ *                  type: string
+ *                  description: the creators username
+ *                  example: ijwilliamson
+ *              created_at:
+ *                  type: date
+ *                  description: The post created Date
+ *                  example: 2022-12-08 16:09:24
  *              post_content:
  *                  type: string
  *                  description: The content of the post
