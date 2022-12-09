@@ -162,6 +162,7 @@ exports.validateToken = async (
             return;
         }
         request.userId = user.id;
+        request.region = user.region_id;
         console.log(decodedToken);
 
         request.isTokenValid = true;

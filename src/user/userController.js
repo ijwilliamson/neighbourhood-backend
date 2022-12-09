@@ -95,6 +95,9 @@ exports.createUser = async (req, res) => {
 exports.readUsers = async (req, res) => {
     try {
         const users = await User.findAll({
+            where: {
+                region_id: req.region,
+            },
             attributes: [
                 "id",
                 "user_name",
@@ -115,9 +118,13 @@ exports.readUsers = async (req, res) => {
 
 exports.readUser = async (req, res) => {
     try {
-        const user = await User.findByPk(
-            req.params.id,
+        const user = await User.findOne(
+            // req.params.id,
             {
+                where: {
+                    id: req.params.id,
+                    region_id: req.region,
+                },
                 attributes: [
                     "id",
                     "user_name",
