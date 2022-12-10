@@ -146,7 +146,8 @@ exports.likePost = async (req, res) => {
 exports.readPosts = async (req, res) => {
     try {
         const sql = `${baseSQL}
-                    WHERE (Favorites.UserId = ${req.userId} OR Favorites.UserId IS NULL) AND RegionId = ${req.region}`;
+                    WHERE (Favorites.UserId = ${req.userId} OR Favorites.UserId IS NULL) AND RegionId = ${req.region}
+                    ORDER BY Posts.created_at DESC`;
 
         const posts = await sequelize.query(sql);
 
@@ -177,7 +178,8 @@ exports.readTypePost = async (req, res) => {
 
         const sql = `${baseSQL}
                     WHERE ((Favorites.UserId = ${req.userId} OR Favorites.UserId IS NULL) AND
-                            (${sqlFilter})) AND RegionId = ${req.region}`;
+                            (${sqlFilter})) AND RegionId = ${req.region}
+                    ORDER BY Posts.created_at DESC`;
 
         const posts = await sequelize.query(sql);
 
@@ -206,7 +208,8 @@ exports.searchPost = async (req, res) => {
 
         const sql = `${baseSQL}
                     WHERE ((Favorites.UserId = ${req.userId} OR Favorites.UserId IS NULL) AND
-                            (post_content LIKE '%${req.params.search}%')) AND RegionId = ${req.region}`;
+                            (post_content LIKE '%${req.params.search}%')) AND RegionId = ${req.region}
+                    ORDER BY Posts.created_at DESC`;
 
         const posts = await sequelize.query(sql);
 
@@ -236,7 +239,8 @@ exports.readUserPost = async (req, res) => {
 
         const sql = `${baseSQL}
                     WHERE ((Favorites.UserId = ${req.userId} OR Favorites.UserId IS NULL) AND
-                            (Posts.UserId = ${req.params.user_id}))  AND RegionId = ${req.region}`;
+                            (Posts.UserId = ${req.params.user_id}))  AND RegionId = ${req.region}
+                    ORDER BY Posts.created_at DESC`;
 
         const posts = await sequelize.query(sql);
 
@@ -266,7 +270,8 @@ exports.readPost = async (req, res) => {
     try {
         const sql = `${baseSQL}
                     WHERE ((Favorites.UserId = ${req.userId} OR Favorites.UserId IS NULL) AND
-                            (Posts.id = ${req.params.id}))  AND RegionId = ${req.region}`;
+                            (Posts.id = ${req.params.id}))  AND RegionId = ${req.region}
+                    ORDER BY Posts.created_at`;
 
         const post = await sequelize.query(sql);
 
