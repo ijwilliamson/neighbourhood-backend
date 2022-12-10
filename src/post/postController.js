@@ -266,6 +266,47 @@ exports.readUserPost = async (req, res) => {
     }
 };
 
+exports.readUserFavouritePost = async (
+    req,
+    res
+) => {
+    try {
+        if (!req.params.user_id) {
+            res.status(500).json({
+                message: "No user_id provided",
+            });
+            return;
+        }
+
+        const sql = `${baseSQL}
+                    WHERE ((Favorites.UserId = ${req.userId}) AND
+                            (Posts.UserId = ${req.params.user_id}))  AND RegionId = ${req.region}
+                    ORDER BY Posts.created_at DESC`;
+
+        const posts = await sequelize.query(sql);
+
+        // const user = await User.findByPk(
+        //     req.params.user_id,
+        //     {
+        //         include: { model: Post },
+        //     }
+        // );
+
+        // if (!user) {
+        //     res.status(500).json({
+        //         message: "User not found",
+        //     });
+        //     return;
+        // }
+
+        res.status(200).json(posts[0]);
+    } catch (error) {
+        res.status(500).json({
+            message: error.message,
+        });
+    }
+};
+
 exports.readPost = async (req, res) => {
     try {
         const sql = `${baseSQL}
