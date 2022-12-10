@@ -17,6 +17,7 @@ const {
     favoritePost,
     likePost,
     readUserFavouritePost,
+    readUserTypePost,
 } = require("./postController");
 
 /**
@@ -450,6 +451,54 @@ postRouter.get(
     "/posts/type/:post_type",
     validateToken,
     readTypePost
+);
+
+/**
+ * @swagger
+ * /posts/user/{user_id}/type/{post_type}:
+ *  get:
+ *      tags:
+ *          - post
+ *      description: Use to request posts by type
+ *      parameters:
+ *      -   in: path
+ *          name: user_id
+ *          schema:
+ *              type: integer
+ *              required: true
+ *              description: the user id
+ *      -   in: path
+ *          name: post_type
+ *          schema:
+ *              type: string
+ *              required: true
+ *              description: The post type Array
+ *      responses:
+ *          '200':
+ *              description: A successful response
+ *              content:
+ *                  application/json:
+ *                      schema:
+ *                          type: array
+ *                          items:
+ *                              $ref: '#/components/schemas/Post'
+ *          '500':
+ *              description: An error response
+ *              content:
+ *                  application/json:
+ *                      schema:
+ *                          type: object
+ *                          properties:
+ *                              message:
+ *                                  type: string
+ *                                  description: The error message
+ *                                  example: Internal server error
+ */
+
+postRouter.get(
+    "/posts/user/:user_id/type/:post_type",
+    validateToken,
+    readUserTypePost
 );
 
 /**
