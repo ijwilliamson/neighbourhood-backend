@@ -57,6 +57,10 @@ const {
  *                  type: bool
  *                  description: The current user has this post as a favorite
  *                  example: "1"
+ *              userLike:
+ *                  type: bool
+ *                  description: The current user has liked this post
+ *                  example: "1"
  *
  *      NewPost:
  *          type: object
@@ -374,9 +378,9 @@ postRouter.get(
  *      -   in: path
  *          name: post_type
  *          schema:
- *              type: integer
+ *              type: string
  *              required: true
- *              description: The post type id
+ *              description: The post type Array
  *      responses:
  *          '200':
  *              description: A successful response

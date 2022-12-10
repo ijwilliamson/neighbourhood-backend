@@ -25,6 +25,9 @@ const Post = sequelize.define(
         updated_at: {
             type: DataTypes.DATE,
         },
+        regionId: {
+            type: DataTypes.INTEGER,
+        },
     },
     { timestamps: false }
 );
