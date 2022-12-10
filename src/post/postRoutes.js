@@ -57,6 +57,10 @@ const {
  *                  type: bool
  *                  description: The current user has this post as a favorite
  *                  example: "1"
+ *              userLike:
+ *                  type: bool
+ *                  description: The current user has liked this post
+ *                  example: "1"
  *
  *      NewPost:
  *          type: object
