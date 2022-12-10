@@ -196,6 +196,43 @@ exports.readTypePost = async (req, res) => {
     }
 };
 
+exports.readUserTypePost = async (req, res) => {
+    // req.params.post_type will now be an arry  [2,3,4] as a string
+
+    try {
+        // build filter
+        const filterString = req.params.post_type;
+        const filter = JSON.parse(filterString);
+        let sqlFilter = "";
+        filter.forEach((f) => {
+            sqlFilter += `post_type = ${f} OR `;
+        });
+        sqlFilter = sqlFilter.slice(
+            0,
+            sqlFilter.length - 4
+        );
+        console.log(sqlFilter);
+
+        const sql = `${baseSQL}
+                    WHERE ((Favorites.UserId = ${req.userId} OR Favorites.UserId IS NULL) AND
+                            (${sqlFilter})) AND RegionId = ${req.region} AND Posts.UserId = ${req.params.user_id}
+                    ORDER BY Posts.created_at DESC`;
+
+        const posts = await sequelize.query(sql);
+
+        // const posts = await Post.findAll({
+        //     where: {
+        //         post_type: req.params.post_type,
+        //     },
+        // });
+        res.status(200).json(posts[0]);
+    } catch (error) {
+        res.status(500).json({
+            message: error.message,
+        });
+    }
+};
+
 exports.searchPost = async (req, res) => {
     try {
         if (!req.params.search) {
