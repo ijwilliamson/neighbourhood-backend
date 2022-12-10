@@ -141,7 +141,7 @@ exports.readPosts = async (req, res) => {
                     LEFT JOIN Favorites On Posts.Id = Favorites.PostId
                     LEFT JOIN PostLikes On Posts.Id = PostLikes.PostId
                     LEFT JOIN Users ON Posts.UserId = Users.id
-                    WHERE Favorites.UserId = ${req.userId} OR Favorites.UserId IS NULL`;
+                    WHERE (Favorites.UserId = ${req.userId} OR Favorites.UserId IS NULL) AND RegionId = ${req.region}`;
 
         const posts = await sequelize.query(sql);
 
@@ -161,8 +161,8 @@ exports.readTypePost = async (req, res) => {
                     LEFT JOIN Favorites On Posts.Id = Favorites.PostId
                     LEFT JOIN PostLikes On Posts.Id = PostLikes.PostId
                     LEFT JOIN Users ON Posts.UserId = Users.id
-                    WHERE (Favorites.UserId = ${req.userId} OR Favorites.UserId IS NULL) AND
-                            (post_type = ${req.params.post_type})`;
+                    WHERE ((Favorites.UserId = ${req.userId} OR Favorites.UserId IS NULL) AND
+                            (post_type = ${req.params.post_type})) AND RegionId = ${req.region} `;
 
         const posts = await sequelize.query(sql);
 
@@ -195,8 +195,8 @@ exports.searchPost = async (req, res) => {
                     LEFT JOIN Favorites On Posts.Id = Favorites.PostId
                     LEFT JOIN PostLikes On Posts.Id = PostLikes.PostId
                     LEFT JOIN Users ON Posts.UserId = Users.id
-                    WHERE (Favorites.UserId = ${req.userId} OR Favorites.UserId IS NULL) AND
-                            (post_content LIKE '%${req.params.search}%')`;
+                    WHERE ((Favorites.UserId = ${req.userId} OR Favorites.UserId IS NULL) AND
+                            (post_content LIKE '%${req.params.search}%')) AND RegionId = ${req.region}`;
 
         const posts = await sequelize.query(sql);
 
@@ -230,8 +230,8 @@ exports.readUserPost = async (req, res) => {
                     LEFT JOIN Favorites On Posts.Id = Favorites.PostId
                     LEFT JOIN PostLikes On Posts.Id = PostLikes.PostId
                     LEFT JOIN Users ON Posts.UserId = Users.id
-                    WHERE (Favorites.UserId = ${req.userId} OR Favorites.UserId IS NULL) AND
-                            (Posts.UserId = ${req.params.user_id})`;
+                    WHERE ((Favorites.UserId = ${req.userId} OR Favorites.UserId IS NULL) AND
+                            (Posts.UserId = ${req.params.user_id}))  AND RegionId = ${req.region}`;
 
         const posts = await sequelize.query(sql);
 
@@ -265,14 +265,21 @@ exports.readPost = async (req, res) => {
                     LEFT JOIN Favorites On Posts.Id = Favorites.PostId
                     LEFT JOIN PostLikes On Posts.Id = PostLikes.PostId
                     LEFT JOIN Users ON Posts.UserId = Users.id
-                    WHERE (Favorites.UserId = ${req.userId} OR Favorites.UserId IS NULL) AND
-                            (Posts.id = ${req.params.id})`;
+                    WHERE ((Favorites.UserId = ${req.userId} OR Favorites.UserId IS NULL) AND
+                            (Posts.id = ${req.params.id}))  AND RegionId = ${req.region}`;
 
         const post = await sequelize.query(sql);
 
         // const post = await Post.findByPk(
         //     req.params.id
         // );
+
+        if (post[0].length === 0) {
+            res.status(500).json({
+                message: "post not found",
+            });
+        }
+
         res.status(200).json(post[0][0]);
     } catch (error) {
         res.status(500).json({
