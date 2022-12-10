@@ -154,7 +154,22 @@ exports.readPosts = async (req, res) => {
 };
 
 exports.readTypePost = async (req, res) => {
+    // req.params.post_type will now be an arry  [2,3,4] as a string
+
     try {
+        // build filter
+        const filterString = req.params.post_type;
+        const filter = JSON.parse(filterString);
+        let sqlFilter = "";
+        filter.forEach((f) => {
+            sqlFilter += `post_type = ${f} OR `;
+        });
+        sqlFilter = sqlFilter.slice(
+            0,
+            sqlFilter.length - 4
+        );
+        console.log(sqlFilter);
+
         const sql = `SELECT Posts.id, post_type, post_content, Posts.UserId as user_id, Posts.created_at, Users.user_name, 
                     If (PostLikes.Likes IS NULL, 0, PostLikes.Likes) As likes,
                     If(Favorites.UserId IS NOT NULL, True, False) As fav FROM Posts
@@ -162,7 +177,7 @@ exports.readTypePost = async (req, res) => {
                     LEFT JOIN PostLikes On Posts.Id = PostLikes.PostId
                     LEFT JOIN Users ON Posts.UserId = Users.id
                     WHERE ((Favorites.UserId = ${req.userId} OR Favorites.UserId IS NULL) AND
-                            (post_type = ${req.params.post_type})) AND RegionId = ${req.region} `;
+                            (${sqlFilter})) AND RegionId = ${req.region}`;
 
         const posts = await sequelize.query(sql);
 

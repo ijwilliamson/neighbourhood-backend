@@ -374,9 +374,9 @@ postRouter.get(
  *      -   in: path
  *          name: post_type
  *          schema:
- *              type: integer
+ *              type: string
  *              required: true
- *              description: The post type id
+ *              description: The post type Array
  *      responses:
  *          '200':
  *              description: A successful response
