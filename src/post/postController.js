@@ -29,6 +29,7 @@ exports.createPost = async (req, res) => {
             post_content: req.body.post_content,
             created_at: new Date().toJSON(),
             updated_at: new Date().toJSON(),
+            regionId: req.region,
         });
 
         if (!newPost) {
