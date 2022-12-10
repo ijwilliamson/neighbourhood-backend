@@ -16,6 +16,7 @@ const {
     searchPost,
     favoritePost,
     likePost,
+    readUserFavouritePost,
 } = require("./postController");
 
 /**
@@ -365,6 +366,48 @@ postRouter.get(
     "/posts/user/:user_id",
     validateToken,
     readUserPost
+);
+
+/**
+ * @swagger
+ * /posts/user/favourite/{user_id}:
+ *  get:
+ *      tags:
+ *          - post
+ *      description: Use to request a users favourite posts
+ *      parameters:
+ *      -   in: path
+ *          name: user_id
+ *          schema:
+ *              type: integer
+ *              required: true
+ *              description: The post id
+ *      responses:
+ *          '200':
+ *              description: A successful response
+ *              content:
+ *                  application/json:
+ *                      schema:
+ *                          type: array
+ *                          items:
+ *                              $ref: '#/components/schemas/Post'
+ *          '500':
+ *              description: An error response
+ *              content:
+ *                  application/json:
+ *                      schema:
+ *                          type: object
+ *                          properties:
+ *                              message:
+ *                                  type: string
+ *                                  description: The error message
+ *                                  example: Internal server error
+ */
+
+postRouter.get(
+    "/posts/user/favourite/:user_id",
+    validateToken,
+    readUserFavouritePost
 );
 
 /**
