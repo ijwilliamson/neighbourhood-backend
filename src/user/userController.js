@@ -14,10 +14,12 @@ exports.createUser = async (req, res) => {
         );
         // if no
         if (!oa21cd) {
-            res.status(400).send(
-                "Invalid postcode"
-            );
-            console.log("invalid postcode");
+            res.status(400).send({
+                error: "Invalid postcode",
+            });
+            console.log({
+                error: "invalid postcode",
+            });
             return;
         }
         // check if region already exists if not create it, created is a boolean value
