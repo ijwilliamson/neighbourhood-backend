@@ -10,7 +10,7 @@ const baseSQL = `SELECT Posts.id, post_type, Posts.UserId as user_id, Users.user
                     If (Favorites.UserId IS NOT NULL, True, False) As fav,
                     If (Likes.UserId IS NOT NULL, True, False) As userLike
                     FROM Posts
-                    LEFT JOIN Favorites On Posts.Id = Favorites.PostId AND Posts.UserId = Favorites.UserId
+                    LEFT JOIN Favorites On Posts.Id = Favorites.PostId 
                     LEFT JOIN Likes on Posts.Id = Likes.PostId AND Posts.UserId = Likes.UserId
                     LEFT JOIN PostLikes On Posts.Id = PostLikes.PostId
                     LEFT JOIN Users ON Posts.UserId = Users.id`;
@@ -316,8 +316,7 @@ exports.readUserFavouritePost = async (
         }
 
         const sql = `${baseSQL}
-                    WHERE ((Favorites.UserId = ${req.userId}) AND
-                            (Posts.UserId = ${req.params.user_id}))  AND RegionId = ${req.region}
+                    WHERE (Favorites.UserId = ${req.params.user_id})  AND RegionId = ${req.region}
                     ORDER BY Posts.created_at DESC`;
 
         const posts = await sequelize.query(sql);
