@@ -20,7 +20,7 @@ exports.validateNewUser = async (
         const result = await checks[i](request);
         if (!result.status) {
             response
-                .status(400)
+                .status(201)
                 .send({ error: result.msg });
             return;
         }
