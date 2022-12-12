@@ -11,6 +11,7 @@ const User = require("./user/userModel");
 const Post = require("./post/postModel");
 const FavoritePost = require("./post/userPostModel");
 const likePost = require("./post/likePost");
+const Comment = require("./comments/commentModel");
 
 // swagger
 const swaggerJsDoc = require("swagger-jsdoc");
@@ -51,7 +52,7 @@ const swaggerOptions = {
         "src/school/schoolRoutes.js",
         "src/user/userRoutes.js",
         "src/auth/authRoutes.js",
-
+        "src/comments/commentRoutes.js",
         "src/server.js",
     ],
 };
@@ -60,11 +61,12 @@ const swaggerDocs = swaggerJsDoc(swaggerOptions);
 
 // routes
 
-const postRoutes = require("./post/postRoutes");
-const regionRoutes = require("./region/regionRoutes");
+const postRouter = require("./post/postRoutes");
+const regionRouter = require("./region/regionRoutes");
 const userRouter = require("./user/userRoutes");
 const authRouter = require("./auth/authRoutes");
 const schoolRouter = require("./school/schoolRoutes");
+const commentRouter = require("./comments/commentRoutes");
 
 // sequelize
 const syncTables = async () => {
@@ -79,6 +81,7 @@ const syncTables = async () => {
     User.belongsToMany(Post, {
         through: FavoritePost,
     });
+
     Post.belongsToMany(User, {
         through: FavoritePost,
     });
@@ -89,6 +92,12 @@ const syncTables = async () => {
     Post.belongsToMany(User, {
         through: likePost,
     });
+
+    Post.hasMany(Comment, {
+        OnDelete: "CASCADE",
+        onUpdate: "CASCADE",
+    });
+    Comment.belongsTo(Post);
 
     sequelize.sync();
 };
@@ -103,11 +112,12 @@ const app = express();
 app.use(cors({ origin: "*" }));
 app.use(express.json());
 
-app.use(postRoutes);
-app.use(regionRoutes);
+app.use(postRouter);
+app.use(regionRouter);
 app.use(userRouter);
 app.use(authRouter);
 app.use(schoolRouter);
+app.use(commentRouter);
 
 app.use(
     "/api-docs",
