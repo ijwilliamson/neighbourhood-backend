@@ -18,7 +18,7 @@ const {
  *      Comment:
  *          type: object
  *          properties:
- *              id:
+ *              Id:
  *                  type: integer
  *                  description: The auto-generated id of the comment
  *                  example: 1
@@ -34,6 +34,10 @@ const {
  *                  type: string
  *                  description: The content of the comment
  *                  example: "This is a comment"
+ *              user_name:
+ *                  type: string
+ *                  description: The username of the commenter
+ *                  example: Bill
  *
  *      NewComment:
  *          type: object
