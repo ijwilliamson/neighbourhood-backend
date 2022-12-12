@@ -26,15 +26,20 @@ exports.createComment = async (req, res) => {
 
 exports.getComments = async (req, res) => {
     try {
-        const comments = await Comment.findAll({
-            where: { PostId: req.params.PostId },
-        });
+        const sql = `SELECT Comments.Id, Comments.PostId, Comments.userId, Comments.content, 
+                         Users.user_name FROM Comments
+                         INNER JOIN Users On Comments.userId = Users.id
+                         WHERE PostId = ${req.params.PostId}`;
+
+        const comments = await sequelize.query(
+            sql
+        );
 
         if (!comments) {
             res.status(201).json([]);
         }
 
-        res.status(201).json(comments);
+        res.status(201).json(comments[0]);
     } catch (error) {
         res.status(500).json({
             message: error.message,
