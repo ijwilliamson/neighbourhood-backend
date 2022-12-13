@@ -51,6 +51,10 @@ const {
  *                  type: string
  *                  description: The content of the post
  *                  example: "This is a post"
+ *              comments:
+ *                  type: integer
+ *                  description: The number of likes
+ *                  example: 3
  *              likes:
  *                  type: integer
  *                  description: The number of likes
