@@ -18,6 +18,7 @@ const {
     likePost,
     readUserFavouritePost,
     readUserTypePost,
+    searchUserPost,
 } = require("./postController");
 
 /**
@@ -327,6 +328,54 @@ postRouter.get(
 
 postRouter.get(
     "/posts/search/:search",
+    validateToken,
+    searchPost
+);
+
+/**
+ * @swagger
+ * /posts/users/{user_id}/search/{search}:
+ *  get:
+ *      tags:
+ *          - post
+ *      description: Use to search for posts matching a search term
+ *      parameters:
+ *      -   in: path
+ *          name: user_id
+ *          schema:
+ *              type: integer
+ *              required: true
+ *              description: the user id
+ *      -   in: path
+ *          name: search
+ *          schema:
+ *              type: string
+ *              required: true
+ *              description: The search term
+ *      responses:
+ *          '200':
+ *              description: A successful response
+ *              content:
+ *                  application/json:
+ *                      schema:
+ *                          type: array
+ *                          items:
+ *                              $ref: '#/components/schemas/Post'
+ *          '500':
+ *              description: An error response
+ *              content:
+ *                  application/json:
+ *                      schema:
+ *                          type: object
+ *                          properties:
+ *                              message:
+ *                                  type: string
+ *                                  description: The error message
+ *                                  example: Internal server error
+ */
+
+postRouter.get(
+    "/posts/users/:user_id/search/:search",
     validateToken,
     searchPost
 );
