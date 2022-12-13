@@ -16,7 +16,7 @@ const baseSQL = (userId) => {
             LEFT JOIN CommentCount ON Posts.id = CommentCount.PostId
             LEFT JOIN Likes ON Posts.id = Likes.PostId AND (Likes.UserId = ${userId} OR Likes.UserId IS NULL)
             LEFT JOIN Users ON Posts.UserId = Users.id
-            LEFT JOIN Favorites ON Posts.id = Favorites.PostId AND (Favorites.PostId = ${userId} OR Favorites.PostId IS NULL)`;
+            LEFT JOIN Favorites ON Posts.id = Favorites.PostId AND (Favorites.UserId = ${userId} OR Favorites.UserId IS NULL)`;
 };
 exports.createPost = async (req, res) => {
     try {
