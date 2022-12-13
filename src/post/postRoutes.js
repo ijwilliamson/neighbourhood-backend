@@ -377,7 +377,7 @@ postRouter.get(
 postRouter.get(
     "/posts/users/:user_id/search/:search",
     validateToken,
-    searchPost
+    searchUserPost
 );
 
 /**
