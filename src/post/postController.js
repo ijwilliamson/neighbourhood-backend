@@ -261,6 +261,41 @@ exports.searchPost = async (req, res) => {
     }
 };
 
+exports.searchUserPost = async (req, res) => {
+    try {
+        if (!req.params.search) {
+            res.status(500).json({
+                message:
+                    "No search term supplied",
+            });
+            return;
+        }
+
+        if (!req.params.user_id) {
+            res.status(500).json({
+                message: "No user id supplied",
+            });
+            return;
+        }
+
+        const sql = `${baseSQL(req.userId)}
+                    WHERE Posts.UserId = ${
+                        req.params.user_id
+                    } AND post_content LIKE '%${
+            req.params.search
+        }%' AND RegionId = ${req.region}
+                    ORDER BY Posts.created_at DESC`;
+
+        const posts = await sequelize.query(sql);
+
+        res.status(200).json(posts[0]);
+    } catch (error) {
+        res.status(500).json({
+            message: error.message,
+        });
+    }
+};
+
 exports.readUserPost = async (req, res) => {
     try {
         if (!req.params.user_id) {
