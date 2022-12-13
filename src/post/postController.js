@@ -6,16 +6,17 @@ const { Op } = require("sequelize");
 const { sequelize } = require("../db/connection");
 
 const baseSQL = (userId) => {
-    return `SELECT Posts.id, Posts.post_type, Posts.post_content, Posts.created_at, Posts.updated_at, Posts.UserId, Posts.RegionId,
-                If (CommentCount.comments IS NULL, 0, CommentCount.comments) As comments,
-                If (PostLikes.Likes IS NULL, 0, PostLikes.Likes) AS likes,
-                If (Favorites.UserId IS NOT NULL, True, False) As fav,
-                If (Likes.UserId IS NOT NULL, True, False) As userLike
-                FROM Posts
-                LEFT JOIN PostLikes ON Posts.id = PostLikes.PostId
-                LEFT JOIN CommentCount ON Posts.id = CommentCount.PostId
-                LEFT JOIN Likes ON Posts.id = Likes.PostId AND (Likes.UserId = ${userId} OR Likes.UserId IS NULL)
-                LEFT JOIN Favorites ON Posts.id = Favorites.PostId AND (Favorites.PostId = ${userId} OR Favorites.PostId IS NULL)`;
+    return `SELECT Posts.id, Posts.post_type, Posts.UserId as user_id, Users.user_name, Posts.created_at, Posts.post_content,
+            If (CommentCount.comments IS NULL, 0, CommentCount.comments) As comments,
+            If (PostLikes.Likes IS NULL, 0, PostLikes.Likes) AS likes,
+            If (Favorites.UserId IS NOT NULL, True, False) As fav,
+            If (Likes.UserId IS NOT NULL, True, False) As userLike
+            FROM Posts
+            LEFT JOIN PostLikes ON Posts.id = PostLikes.PostId
+            LEFT JOIN CommentCount ON Posts.id = CommentCount.PostId
+            LEFT JOIN Likes ON Posts.id = Likes.PostId AND (Likes.UserId = ${userId} OR Likes.UserId IS NULL)
+            LEFT JOIN Users ON Posts.UserId = Users.id
+            LEFT JOIN Favorites ON Posts.id = Favorites.PostId AND (Favorites.PostId = ${userId} OR Favorites.PostId IS NULL)`;
 };
 exports.createPost = async (req, res) => {
     try {
@@ -297,13 +298,27 @@ exports.readUserFavouritePost = async (
             return;
         }
 
-        const sql = `${baseSQL(req.userId)}
-                    WHERE Posts.UserId = ${
-                        req.params.user_id
-                    }  AND RegionId = ${
-            req.region
-        }
+        const sql = `SELECT Favorites.PostId, Posts.post_type, Favorites.UserId as user_id, Users.user_name, Posts.created_at, Posts.post_content,
+                    If (CommentCount.comments IS NULL, 0, CommentCount.comments) As comments,
+                    If (PostLikes.Likes IS NULL, 0, PostLikes.Likes) AS likes,
+                    If (Favorites.UserId IS NOT NULL, True, False) As fav,
+                    If (Likes.UserId IS NOT NULL, True, False) As userLike
+                    FROM Favorites
+                    INNER JOIN Posts On Favorites.PostId = Posts.Id
+                    LEFT JOIN PostLikes ON Posts.id = PostLikes.PostId
+                    LEFT JOIN CommentCount ON Posts.id = CommentCount.PostId
+                    LEFT JOIN Likes ON Posts.id = Likes.PostId AND (Likes.UserId = ${req.userId} OR Likes.UserId IS NULL)
+                    LEFT JOIN Users ON Posts.UserId = Users.id
+                    WHERE Posts.RegionId = ${req.region} AND Favorites.UserId = ${req.userId}
                     ORDER BY Posts.created_at DESC`;
+
+        // const sql = `${baseSQL(req.userId)}
+        //             WHERE Posts.UserId = ${
+        //                 req.params.user_id
+        //             }  AND RegionId = ${
+        //     req.region
+        // }
+        //             ORDER BY Posts.created_at DESC`;
 
         const posts = await sequelize.query(sql);
 
@@ -318,9 +333,9 @@ exports.readUserFavouritePost = async (
 exports.readPost = async (req, res) => {
     try {
         const sql = `${baseSQL(req.userId)}
-                    WHERE (Posts.id = ${
+                    WHERE Posts.id = ${
                         req.params.id
-                    }))  AND RegionId = ${
+                    }  AND RegionId = ${
             req.region
         }
                     ORDER BY Posts.created_at`;
