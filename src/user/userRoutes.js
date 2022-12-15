@@ -157,7 +157,7 @@ const userRouter = Router();
  *  get:
  *      tags:
  *          - user
- *      description: Use to get a list of foods
+ *      description: Use to get a list of users
  *      responses:
  *          '200':
  *              description: A successful response
