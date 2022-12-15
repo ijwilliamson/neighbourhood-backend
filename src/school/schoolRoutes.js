@@ -110,7 +110,7 @@ schoolRouter.get(
  *  get:
  *      tags:
  *          - school
- *      description: Use to get a schools by name
+ *      description: Use to get a school by name
  *      parameters:
  *      -   in: path
  *          name: name
